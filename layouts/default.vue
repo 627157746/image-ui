@@ -2,9 +2,7 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
+      clipped-left
       app
     >
       <div class="pa-2">
@@ -15,8 +13,8 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
-          router
-          exact
+          nuxt
+          link
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -42,17 +40,47 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="clipped"
+      shrink-on-scroll
+      elevate-on-scroll
+      src="https://picsum.photos/1920/1080?random"
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="hidden-xs-only" v-text="title" />
+      <template v-slot:img="{ props }">
+        <v-img
+          v-bind="props"
+          gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+        />
+      </template>
+      <v-app-bar-nav-icon :class="drawer?'':'hidden-md-and-up'" @click.stop="drawer = !drawer" />
+      <v-toolbar-title class="hidden-sm-and-down">
+        <v-btn text nuxt link to="/">
+          {{ title }}
+        </v-btn>
+      </v-toolbar-title>
       <v-spacer />
-      <v-row
-        align="center"
-        style="max-width: 650px"
-      >
+      <v-toolbar-title class="hidden-sm-and-down">
+        <v-btn text nuxt link to="/t/1">
+          菜单1
+        </v-btn>
+      </v-toolbar-title>
+      <v-toolbar-title class="hidden-sm-and-down">
+        <v-btn text nuxt link to="/t/2">
+          菜单2
+        </v-btn>
+      </v-toolbar-title>
+      <v-toolbar-title class="hidden-sm-and-down">
+        <v-btn text nuxt link to="/t/3">
+          菜单3
+        </v-btn>
+      </v-toolbar-title>
+      <v-toolbar-title class="hidden-sm-and-down">
+        <v-btn text nuxt link to="/t/4">
+          菜单4
+        </v-btn>
+      </v-toolbar-title>
+      <v-spacer />
+      <v-toolbar-title>
         <v-text-field
           placeholder="请输入关键字。。。"
           clearable
@@ -60,8 +88,29 @@
           hide-details
           @click:append="serach"
         />
-      </v-row>
+      </v-toolbar-title>
       <v-spacer />
+      <v-menu>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="hidden-sm-and-down"
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-wrench</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-switch
+              v-model="$vuetify.theme.dark"
+              primary
+              label="夜间模式"
+            />
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -69,7 +118,7 @@
       </v-container>
     </v-content>
     <v-footer
-      class="hidden-xs-only"
+      class="hidden-sm-and-down"
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -106,7 +155,6 @@ export default {
           to: '/menu3'
         }
       ],
-      miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
