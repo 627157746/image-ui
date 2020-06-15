@@ -31,7 +31,7 @@
               v-for="(image,index) in data"
               :key="image.id"
               width="100%"
-              :src="'http://img.wadjj.xyz'+image.path"
+              :src="$store.state.config.imageDomain+image.path"
               :style="index!=0?{'display':'none'}:{}"
             >
           </viewer>
@@ -95,7 +95,10 @@ export default {
   },
   head () {
     return {
-      title: this.data[0].title
+      title: this.data[0].title,
+      meta: [
+        { hid: 'description', name: 'description', content: +'‘' + this.data[0].title + '’我爱大姐姐写真网(wadjj.xyz)提供图片浏览。' }
+      ]
     }
   }
 }

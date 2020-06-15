@@ -21,7 +21,8 @@ export const state = () => ({
       to: '/t/4'
     }
   ],
-  hot: []
+  hot: [],
+  imageDomain: 'http://img.wadjj.xyz'
 })
 export const mutations = {
   SET_HOT: (state, hot) => {

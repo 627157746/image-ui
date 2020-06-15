@@ -4,7 +4,7 @@ export const actions = {
     const pageQuery = {
       pg: 1,
       pz: 10,
-      order: 2,
+      o: 1,
       search: false
     }
     const { data } = await pageByQuery($axios, pageQuery)

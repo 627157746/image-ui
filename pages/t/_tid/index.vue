@@ -69,7 +69,7 @@ export default {
   },
   head () {
     return {
-      title: '分类'
+      title: this.data.records[0].typeName
     }
   },
   watchQuery: ['pg', 'o']

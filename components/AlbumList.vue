@@ -23,7 +23,7 @@
               :height="imageSize.height"
               :width="imageSize.width"
               class="grey lighten-2"
-              :src="'http://img.wadjj.xyz'+album.cover"
+              :src="$store.state.config.imageDomain+album.cover"
             >
               <div class="img-title white--text">
                 <div class="mx-2 text-truncate" to="/">
@@ -79,9 +79,9 @@
     <v-pagination
       v-if="pageData.pages>1"
       v-model="pageData.current"
-      class="my-6"
+      class="mt-12 px-3"
       :length="pageData.pages"
-      :total-visible="5"
+      :total-visible="totalVisible"
       circle
       @input="toPage"
     />
@@ -125,7 +125,7 @@ export default {
       width: 250,
       height: 370
     },
-    totalVisible: 10,
+    totalVisible: 5,
     hover: true
   }),
 
@@ -149,12 +149,14 @@ export default {
           height: 500
         }
         this.hover = true
+        this.totalVisible = 5
       } else {
         this.imageSize = {
           width: 250,
           height: 370
         }
         this.hover = false
+        this.totalVisible = 10
       }
     }
   }

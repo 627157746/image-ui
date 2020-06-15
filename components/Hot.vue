@@ -1,22 +1,29 @@
 <template>
   <div>
-    <v-carousel
-      class="mb-6"
-      cycle
-      interval="3000"
-      progress
-      show-arrows-on-hover
-      hide-delimiter-background
-    >
-      <v-carousel-item
-        v-for="album in hot.slice(0,5)"
-        :key="album.id"
-        nuxt
-        link
-        :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
-        :src="'http://img.wadjj.xyz'+album.cover"
-      />
-    </v-carousel>
+    <v-hover>
+      <template v-slot="{ hover }">
+        <v-card
+          :elevation="hover ? 24 : 6"
+        >
+          <v-carousel
+            class="mb-6"
+            cycle
+            interval="3000"
+            show-arrows-on-hover
+            hide-delimiter-background
+          >
+            <v-carousel-item
+              v-for="album in hot.slice(0,5)"
+              :key="album.id"
+              nuxt
+              link
+              :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
+              :src="$store.state.config.imageDomain+album.cover"
+            />
+          </v-carousel>
+        </v-card>
+      </template>
+    </v-hover>
     <v-hover>
       <template v-slot="{ hover }">
         <v-card

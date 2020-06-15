@@ -6,11 +6,12 @@ export default {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
+    titleTemplate: '%s - ' + '我爱大姐姐写真网，美女图片每日更新',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'keywords', name: 'keywords', content: '美女图片,性感美女,美女写真,COSER写真,二次元妹子' },
+      { hid: 'description', name: 'description', content: '我爱大姐姐写真网(wadjj.xyz)每日分享最新最全的妹子图片和高清性感美女图片，包括性感妹子、日本妹子、台湾妹子、清纯妹子、COSER、二次元妹子。' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -24,13 +25,17 @@ export default {
   ** Global CSS
   */
   css: [
+    'assets/main.css'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
     { src: '@/plugins/filters' },
-    { src: '@/plugins/v-viewer' }
+    { src: '@/plugins/v-viewer' },
+    { src: '@/plugins/baidu-count' },
+    { src: '@/plugins/axios' }
+    // { src: '@/plugins/toast', ssr: false, model: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -45,8 +50,13 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/toast'
   ],
+  toast: {
+    position: 'top-center',
+    duration: 2000
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options

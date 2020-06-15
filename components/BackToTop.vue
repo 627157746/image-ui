@@ -30,8 +30,8 @@ export default {
       type: Object,
       default () {
         return {
-          right: '50px',
-          bottom: '50px',
+          right: '20px',
+          bottom: '100px',
           width: '40px',
           height: '40px',
           'border-radius': '4px',
@@ -92,6 +92,7 @@ export default {
 
 <style scoped>
 .back-to-ceiling {
+  z-index: 999;
   position: fixed;
   display: inline-block;
   text-align: center;

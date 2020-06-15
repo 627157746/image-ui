@@ -2,7 +2,7 @@
   <v-btn-toggle
     v-model="order"
     dense
-    class="mx-3"
+    class="ma-3"
   >
     <v-btn @click="changeOrder(0)">
       <v-icon>mdi-autorenew</v-icon>

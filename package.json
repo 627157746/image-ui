@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/toast": "3.3.0",
     "nuxt": "^2.0.0",
-    "v-viewer": "^1.5.1"
+    "v-viewer": "^1.5.1",
+    "vue-toasted": "^1.1.28"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",

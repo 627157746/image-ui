@@ -16,7 +16,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              妹子写真网
+              {{ title }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -86,14 +86,6 @@
           @keyup.13="serach"
           @click:append="serach"
         />
-        <v-snackbar
-          v-model="snackbar"
-          :elevation="24"
-          :timeout="3000"
-          color="cyan darken-2"
-        >
-          请输入关键字。。。
-        </v-snackbar>
       </v-toolbar-title>
       <v-spacer />
       <v-menu>
@@ -148,9 +140,8 @@ export default {
       menus: this.$store.state.config.menus,
       right: true,
       rightDrawer: false,
-      title: '妹子写真网',
+      title: '我爱大姐姐写真网',
       ky: undefined,
-      snackbar: false,
       footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
     }
   },
@@ -160,7 +151,7 @@ export default {
       if (this.ky) {
         this.$router.push({ name: 'search', query: { ky: this.ky } })
       } else {
-        this.snackbar = true
+        this.$toasted.show('请输入关键字。。。')
       }
     }
   }
