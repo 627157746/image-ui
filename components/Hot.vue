@@ -4,16 +4,17 @@
       class="mb-6"
       cycle
       interval="3000"
+      progress
       show-arrows-on-hover
       hide-delimiter-background
     >
       <v-carousel-item
-        v-for="(item,i) in items"
-        :key="i"
+        v-for="album in hot.slice(0,5)"
+        :key="album.id"
         nuxt
         link
-        to="/11111/1"
-        :src="item.src"
+        :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
+        :src="'http://img.wadjj.xyz'+album.cover"
       />
     </v-carousel>
     <v-hover>
@@ -29,27 +30,31 @@
           </v-card-title>
           <v-list>
             <v-list-item
-              v-for="index in 10"
-              :key="index"
+              v-for="(album,index) in hot"
+              :key="album.id"
               nuxt
               link
-              to="/3232233"
+              :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
               class="my-2"
             >
               <v-list-item-icon>
-                <v-icon large :color="index<4?'red':''">
-                  {{ 'mdi-numeric-'+index+'-box-outline' }}
+                <v-icon large :color="index<3?'red':''">
+                  {{ 'mdi-numeric-'+(index+1)+'-box-outline' }}
                 </v-icon>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title>
-                  但是发射点发射点犯得上犯得上犯得上反对得上犯得上反对
+                  {{ album.title }}
                 </v-list-item-title>
                 <v-list-item-subtitle class="mx-3">
                   <v-icon>
                     mdi-eye
                   </v-icon>
-                  666
+                  {{ album.hits }}
+                  <v-icon>
+                    mdi-image
+                  </v-icon>
+                  {{ album.count }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -62,22 +67,11 @@
 
 <script>
 export default {
-  data: () => ({
-    items: [
-      {
-        src: 'https://picsum.photos/510/300?random'
-      },
-      {
-        src: 'https://picsum.photos/510/300?random'
-      },
-      {
-        src: 'https://picsum.photos/510/300?random'
-      },
-      {
-        src: 'https://picsum.photos/510/300?random'
-      }
-    ]
-  })
+  data () {
+    return {
+      hot: this.$store.state.config.hot
+    }
+  }
 }
 </script>
 

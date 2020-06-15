@@ -5,13 +5,24 @@
       clipped-left
       app
     >
-      <div class="pa-2">
-        <v-img src="http://qukanbook.com/_nuxt/img/2e29f6f.png" />
-      </div>
       <v-list>
         <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
+          to="/"
+          nuxt
+          link
+        >
+          <v-list-item-action>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              妹子写真网
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item
+          v-for="(item, index) in menus"
+          :key="index"
           :to="item.to"
           nuxt
           link
@@ -40,9 +51,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      shrink-on-scroll
       elevate-on-scroll
-      src="https://picsum.photos/1920/1080?random"
       fixed
       app
     >
@@ -59,35 +68,32 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <v-toolbar-title class="hidden-sm-and-down">
-        <v-btn text nuxt link to="/t/1">
-          菜单1
-        </v-btn>
-      </v-toolbar-title>
-      <v-toolbar-title class="hidden-sm-and-down">
-        <v-btn text nuxt link to="/t/2">
-          菜单2
-        </v-btn>
-      </v-toolbar-title>
-      <v-toolbar-title class="hidden-sm-and-down">
-        <v-btn text nuxt link to="/t/3">
-          菜单3
-        </v-btn>
-      </v-toolbar-title>
-      <v-toolbar-title class="hidden-sm-and-down">
-        <v-btn text nuxt link to="/t/4">
-          菜单4
+      <v-toolbar-title v-for="(item,index) in menus" :key="index" class="hidden-sm-and-down">
+        <v-btn text nuxt link :to="item.to">
+          {{ item.title }}
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
       <v-toolbar-title>
         <v-text-field
+          ref="search"
+          v-model="ky"
           placeholder="请输入关键字。。。"
-          clearable
           append-icon="mdi-magnify"
           hide-details
+          dense
+          solo
+          @keyup.13="serach"
           @click:append="serach"
         />
+        <v-snackbar
+          v-model="snackbar"
+          :elevation="24"
+          :timeout="3000"
+          color="cyan darken-2"
+        >
+          请输入关键字。。。
+        </v-snackbar>
       </v-toolbar-title>
       <v-spacer />
       <v-menu>
@@ -119,50 +125,43 @@
     </v-content>
     <v-footer
       class="hidden-sm-and-down"
-      app
     >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <div class="text-center" style="width:100%">
+        &copy; {{ footer }}
+      </div>
     </v-footer>
+    <back-to-top />
   </v-app>
 </template>
 
 <script>
+import BackToTop from '@/components/BackToTop'
 export default {
+  components: {
+    BackToTop
+  },
   data () {
     return {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-home',
-          title: '首页',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: '菜单1',
-          to: '/menu1'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: '菜单2',
-          to: '/menu2'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: '菜单3',
-          to: '/menu3'
-        }
-      ],
+      menus: this.$store.state.config.menus,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: '妹子写真网',
+      ky: undefined,
+      snackbar: false,
+      footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
     }
   },
   methods: {
     serach () {
-      console.log('abc')
+      this.$refs.search.blur()
+      if (this.ky) {
+        this.$router.push({ name: 'search', query: { ky: this.ky } })
+      } else {
+        this.snackbar = true
+      }
     }
   }
 }

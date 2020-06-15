@@ -1,7 +1,7 @@
 {
-  "name": "image-ui",
+  "name": "butify-girl",
   "version": "1.0.0",
-  "description": "My praiseworthy Nuxt.js project",
+  "description": "妹子写真网",
   "author": "zhb",
   "private": true,
   "scripts": {
@@ -12,8 +12,9 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
     "nuxt": "^2.0.0",
-    "@nuxtjs/axios": "^5.3.6"
+    "v-viewer": "^1.5.1"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",

@@ -7,7 +7,6 @@ export default {
   */
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -20,7 +19,7 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: 'pink' },
   /*
   ** Global CSS
   */
@@ -30,6 +29,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '@/plugins/filters' },
+    { src: '@/plugins/v-viewer' }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -51,6 +52,13 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    prefix: '/api',
+    proxy: true,
+    credentials: true,
+    debug: false
+  },
+  proxy: {
+    '/api': { target: 'http://localhost:8080', pathRewrite: { '^/api/': '' } }
   },
   /*
   ** vuetify module configuration
