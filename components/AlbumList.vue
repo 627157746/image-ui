@@ -6,14 +6,13 @@
       xl="3"
       md="4"
       sm="6"
-      xs="12"
+      cols="12"
     >
       <v-hover :disabled="hover">
         <template v-slot="{ hover }">
           <v-card
-            class="mx-3"
+            class="mx-sm-3 mx-md-3 mx-lg-3 mx-xl-3 mx-1"
             :height="imageSize.height"
-            :width="imageSize.width"
             :elevation="hover ? 24 : 6"
             nuxt
             link
@@ -76,20 +75,35 @@
         </template>
       </v-hover>
     </v-col>
-    <v-pagination
-      v-if="pageData.pages>1"
-      v-model="pageData.current"
-      class="mt-12 px-3"
-      :length="pageData.pages"
-      :total-visible="totalVisible"
-      circle
-      @input="toPage"
-    />
+    <v-col v-show="pageData.pages>1&&!mobile">
+      <v-pagination
+        v-model="pageData.current"
+        class="mt-12 px-3"
+        :length="pageData.pages"
+        :total-visible="totalVisible"
+        circle
+        @input="toPage"
+      />
+    </v-col>
+    <v-col v-show="pageData.pages>1&&mobile">
+      <mb-pagination
+        :current="pageData.current"
+        :pages="pageData.pages"
+        :search="search"
+        :tid="tid"
+        :o="o"
+        :ky="ky"
+      />
+    </v-col>
   </v-row>
 </template>
 
 <script>
+import MbPagination from '@/components/MbPagination'
 export default {
+  components: {
+    MbPagination
+  },
   props: {
     pageData: {
       required: true,
@@ -122,11 +136,12 @@ export default {
       y: 0
     },
     imageSize: {
-      width: 250,
+      width: '100%',
       height: 370
     },
-    totalVisible: 5,
-    hover: true
+    totalVisible: 7,
+    hover: true,
+    mobile: false
   }),
 
   mounted () {
@@ -143,20 +158,18 @@ export default {
     },
     onResize () {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-      if (this.windowSize.x < 600) {
+      if (this.windowSize.x < 450) {
         this.imageSize = {
-          width: 320,
           height: 500
         }
         this.hover = true
-        this.totalVisible = 5
+        this.mobile = true
       } else {
         this.imageSize = {
-          width: 250,
           height: 370
         }
         this.hover = false
-        this.totalVisible = 10
+        this.mobile = false
       }
     }
   }

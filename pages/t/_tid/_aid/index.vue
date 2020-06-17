@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-resize="onResize">
     <v-col lg="9" md="12">
       <v-card>
         <v-card-title class="hidden-sm-and-down">
@@ -21,16 +21,19 @@
           点击图片开启预览模式
         </v-alert>
         <v-card
-          class="mx-3"
+          class="mx-auto"
+          :width="imageSize.width"
+          :height="imageSize.height"
         >
           <viewer
             ref="viewer"
-            :images="data"
+            :images="images"
           >
             <img
-              v-for="(image,index) in data"
+              v-for="(image,index) in images"
               :key="image.id"
-              width="100%"
+              :width="imageSize.width"
+              :height="imageSize.height"
               :src="$store.state.config.imageDomain+image.path"
               :style="index!=0?{'display':'none'}:{}"
             >
@@ -51,15 +54,19 @@ export default {
   components: {
     Hot
   },
-  validate ({ params, query }) {
-    return /^\d+$/.test(params.aid)
-  },
   async asyncData ({ $axios, params, redirect }) {
     const { data } = await listImageByAid($axios, params.aid)
     if (data.length === 0) {
       redirect('/404')
     }
+    let images = []
+    if (data.length > 20) {
+      images = data.slice(0, 20)
+    } else {
+      images = data
+    }
     return {
+      images,
       data,
       showAlert: false,
       breadcrumbs: [
@@ -81,16 +88,64 @@ export default {
       ]
     }
   },
+  data () {
+    return {
+      windowSize: {
+        x: 0,
+        y: 0
+      },
+      imageSize: {
+        width: 350,
+        height: 500
+      }
+    }
+  },
+  validate ({ params, query }) {
+    return /^\d+$/.test(params.aid)
+  },
   mounted () {
     if (localStorage.getItem('showAlert') === null) {
       this.showAlert = true
     } else {
       this.showAlert = localStorage.getItem('showAlert') === 'true'
     }
+    if (this.data.length > 20) {
+      const lazyImageArr = this.chunk(this.data, 20)
+      lazyImageArr.forEach((element, index) => {
+        setTimeout(() => {
+          this.images = this.images.concat(element)
+        }, 5000 * index)
+      })
+    }
   },
   methods: {
     setShowAlert (showAlert) {
       localStorage.setItem('showAlert', showAlert)
+    },
+    onResize () {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+      if (this.windowSize.x < 400) {
+        this.imageSize = {
+          height: 500,
+          width: '100%'
+        }
+        this.hover = true
+        this.totalVisible = 5
+      } else {
+        this.imageSize = {
+          height: 500,
+          width: 350
+        }
+        this.hover = false
+        this.totalVisible = 10
+      }
+    },
+    chunk (arr, size) {
+      const arr2 = []
+      for (let i = 20; i < arr.length; i = i + size) {
+        arr2.push(arr.slice(i, i + size))
+      }
+      return arr2
     }
   },
   head () {
