@@ -28,6 +28,9 @@ export default {
   css: [
     'assets/main.css'
   ],
+  router: {
+    middleware: 'user-agent'
+  },
   /*
   ** Plugins to load before mounting the App
   */

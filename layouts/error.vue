@@ -7,7 +7,7 @@
       {{ otherError }}
     </h1>
     <NuxtLink to="/">
-      Home page
+      主页
     </NuxtLink>
   </v-app>
 </template>
@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      otherError: '服务器繁忙请稍后后再试'
     }
   },
   head () {

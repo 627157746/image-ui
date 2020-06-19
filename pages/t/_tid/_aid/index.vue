@@ -1,5 +1,5 @@
 <template>
-  <v-row v-resize="onResize">
+  <v-row>
     <v-col lg="9" md="12">
       <v-card>
         <v-card-title class="hidden-sm-and-down">
@@ -22,7 +22,7 @@
         </v-alert>
         <v-card
           class="mx-auto"
-          :width="imageSize.width"
+          :max-width="imageSize.width"
           :height="imageSize.height"
         >
           <viewer
@@ -32,7 +32,7 @@
             <img
               v-for="(image,index) in images"
               :key="image.id"
-              :width="imageSize.width"
+              :max-width="imageSize.width"
               :height="imageSize.height"
               :src="$store.state.config.imageDomain+image.path"
               :style="index!=0?{'display':'none'}:{}"
@@ -90,10 +90,7 @@ export default {
   },
   data () {
     return {
-      windowSize: {
-        x: 0,
-        y: 0
-      },
+      mobile: this.$store.state.config.isMobile,
       imageSize: {
         width: 350,
         height: 500
@@ -121,24 +118,6 @@ export default {
   methods: {
     setShowAlert (showAlert) {
       localStorage.setItem('showAlert', showAlert)
-    },
-    onResize () {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-      if (this.windowSize.x < 400) {
-        this.imageSize = {
-          height: 500,
-          width: '100%'
-        }
-        this.hover = true
-        this.totalVisible = 5
-      } else {
-        this.imageSize = {
-          height: 500,
-          width: 350
-        }
-        this.hover = false
-        this.totalVisible = 10
-      }
     },
     chunk (arr, size) {
       const arr2 = []

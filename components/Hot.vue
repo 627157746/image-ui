@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!$store.state.config.isMobile">
     <v-hover>
       <template v-slot="{ hover }">
         <v-card

@@ -1,5 +1,5 @@
 <template>
-  <v-row v-resize="onResize" justify="start" align="start">
+  <v-row justify="start" align="start">
     <v-col
       v-for="album in pageData.records"
       :key="album.id"
@@ -8,20 +8,20 @@
       sm="6"
       cols="12"
     >
-      <v-hover :disabled="hover">
+      <v-hover :disabled="hoverDisabile">
         <template v-slot="{ hover }">
           <v-card
             class="mx-sm-3 mx-md-3 mx-lg-3 mx-xl-3 mx-1"
-            :height="imageSize.height"
+            :height="height"
             :elevation="hover ? 24 : 6"
             nuxt
             link
             :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
           >
             <v-img
-              :height="imageSize.height"
-              :width="imageSize.width"
-              class="grey lighten-2"
+              :height="height"
+              max-width="350"
+              class="grey lighten-2 mx-auto"
               :src="$store.state.config.imageDomain+album.cover"
             >
               <div class="img-title white--text">
@@ -130,22 +130,28 @@ export default {
       default: false
     }
   },
-  data: () => ({
-    windowSize: {
-      x: 0,
-      y: 0
+  data () {
+    return {
+      imageSize: {
+        width: '100%'
+      },
+      totalVisible: 7,
+      mobile: this.$store.state.config.isMobile
+    }
+  },
+  computed: {
+    height () {
+      if (this.mobile) {
+        return 500
+      }
+      return 370
     },
-    imageSize: {
-      width: '100%',
-      height: 370
-    },
-    totalVisible: 7,
-    hover: true,
-    mobile: false
-  }),
-
-  mounted () {
-    this.onResize()
+    hoverDisabile () {
+      if (this.mobile) {
+        return true
+      }
+      return false
+    }
   },
 
   methods: {
@@ -154,22 +160,6 @@ export default {
         this.$router.push({ name: 'search', query: { pg: page, o: this.o, ky: this.ky } })
       } else {
         this.$router.push({ name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } })
-      }
-    },
-    onResize () {
-      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
-      if (this.windowSize.x < 450) {
-        this.imageSize = {
-          height: 500
-        }
-        this.hover = true
-        this.mobile = true
-      } else {
-        this.imageSize = {
-          height: 370
-        }
-        this.hover = false
-        this.mobile = false
       }
     }
   }

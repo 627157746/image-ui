@@ -7,6 +7,11 @@ export const state = () => ({
     },
     {
       icon: 'mdi-chart-bubble',
+      title: 'COSER妹子',
+      to: '/t/5'
+    },
+    {
+      icon: 'mdi-chart-bubble',
       title: '清纯妹子',
       to: '/t/2'
     },
@@ -22,10 +27,14 @@ export const state = () => ({
     }
   ],
   hot: [],
-  imageDomain: 'http://img.wadjj.xyz'
+  imageDomain: 'http://img.wadjj.xyz',
+  isMobile: false
 })
 export const mutations = {
   SET_HOT: (state, hot) => {
     state.hot = hot
+  },
+  SET_IS_MOBILE: (state, isMobile) => {
+    state.isMobile = isMobile
   }
 }
