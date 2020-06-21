@@ -12,7 +12,8 @@ export default function ({ $axios, redirect, app, store, error }) {
     if (process.server) {
       if (res.code !== 200) {
         error({
-          statusCode: 500
+          statusCode: 500,
+          message: res.msg
         })
       }
     }

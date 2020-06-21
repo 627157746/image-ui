@@ -105,6 +105,7 @@
               v-model="$vuetify.theme.dark"
               primary
               label="夜间模式"
+              @change="dark"
             />
           </v-list-item>
         </v-list>
@@ -145,7 +146,16 @@ export default {
       footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
     }
   },
+  created () {
+    this.$vuetify.theme.dark = this.$store.state.config.dark
+  },
   methods: {
+    dark (dark) {
+      this.$cookies.set('dark', dark ? 1 : 0, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 30
+      })
+    },
     serach () {
       this.$refs.search.blur()
       if (this.ky) {

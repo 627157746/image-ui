@@ -8,19 +8,17 @@
       sm="6"
       cols="12"
     >
-      <v-hover :disabled="hoverDisabile">
+      <v-hover :disabled="false">
         <template v-slot="{ hover }">
           <v-card
             class="mx-sm-3 mx-md-3 mx-lg-3 mx-xl-3 mx-1"
-            :height="height"
             :elevation="hover ? 24 : 6"
             nuxt
             link
             :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
           >
             <v-img
-              :height="height"
-              max-width="350"
+              aspect-ratio="0.7"
               class="grey lighten-2 mx-auto"
               :src="$store.state.config.imageDomain+album.cover"
             >
@@ -75,7 +73,7 @@
         </template>
       </v-hover>
     </v-col>
-    <v-col v-show="pageData.pages>1&&!mobile">
+    <v-col v-if="pageData.pages>1" class="hidden-xs-only">
       <v-pagination
         v-model="pageData.current"
         class="mt-12 px-3"
@@ -85,7 +83,7 @@
         @input="toPage"
       />
     </v-col>
-    <v-col v-show="pageData.pages>1&&mobile">
+    <v-col v-if="pageData.pages>1" class="hidden-sm-and-up">
       <mb-pagination
         :current="pageData.current"
         :pages="pageData.pages"
@@ -139,20 +137,20 @@ export default {
       mobile: this.$store.state.config.isMobile
     }
   },
-  computed: {
-    height () {
-      if (this.mobile) {
-        return 500
-      }
-      return 370
-    },
-    hoverDisabile () {
-      if (this.mobile) {
-        return true
-      }
-      return false
-    }
-  },
+  // computed: {
+  //   height () {
+  //     if (this.mobile) {
+  //       return 500
+  //     }
+  //     return 370
+  //   },
+  //   hoverDisabile () {
+  //     if (this.mobile) {
+  //       return true
+  //     }
+  //     return false
+  //   }
+  // },
 
   methods: {
     toPage (page) {

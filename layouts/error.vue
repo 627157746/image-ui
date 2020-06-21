@@ -4,10 +4,10 @@
       {{ pageNotFound }}
     </h1>
     <h1 v-else>
-      {{ otherError }}
+      {{ error.message||otherError }}
     </h1>
     <NuxtLink to="/">
-      主页
+      回到主页
     </NuxtLink>
   </v-app>
 </template>
@@ -23,7 +23,7 @@ export default {
   },
   data () {
     return {
-      pageNotFound: '404 Not Found',
+      pageNotFound: '网页未找到',
       otherError: '服务器繁忙请稍后后再试'
     }
   },

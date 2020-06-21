@@ -28,13 +28,17 @@ export const state = () => ({
   ],
   hot: [],
   imageDomain: 'http://img.wadjj.xyz',
-  isMobile: false
+  showAlert: 1,
+  dark: 0
 })
 export const mutations = {
   SET_HOT: (state, hot) => {
     state.hot = hot
   },
-  SET_IS_MOBILE: (state, isMobile) => {
-    state.isMobile = isMobile
+  SET_SHOW_ALERT: (state, showAlert) => {
+    state.showAlert = showAlert
+  },
+  SET_DARK: (state, dark) => {
+    state.dark = dark
   }
 }

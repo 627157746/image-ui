@@ -28,9 +28,6 @@ export default {
   css: [
     'assets/main.css'
   ],
-  router: {
-    middleware: 'user-agent'
-  },
   /*
   ** Plugins to load before mounting the App
   */
@@ -38,8 +35,8 @@ export default {
     { src: '@/plugins/filters' },
     { src: '@/plugins/v-viewer' },
     { src: '@/plugins/baidu-count' },
+    { src: '@/plugins/share', ssr: false },
     { src: '@/plugins/axios' }
-    // { src: '@/plugins/toast', ssr: false, model: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -53,9 +50,9 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/toast'
+    '@nuxtjs/toast',
+    'cookie-universal-nuxt'
   ],
   toast: {
     position: 'top-center',
