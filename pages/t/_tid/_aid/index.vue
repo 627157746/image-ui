@@ -9,14 +9,14 @@
           {{ data[0].title }}
         </div>
         <v-alert
-          v-model="showAlert"
+          v-model="hiddenViewTip"
           outlined
           dismissible
           class="ma-3"
           dense
           icon="mdi-info"
           type="success"
-          @input="setShowAlert"
+          @input="setHiddenViewTip"
         >
           点击图片开启预览模式
         </v-alert>
@@ -39,7 +39,7 @@
         <v-btn class="mt-3" icon>
           <v-icon>mdi-share</v-icon>
         </v-btn>
-        <share class="pb-3" />
+        <share :config="config" class="pb-3" />
       </v-card>
     </v-col>
     <v-col class="hidden-md-and-down" lg="3" md="0">
@@ -55,7 +55,7 @@ export default {
   components: {
     Hot
   },
-  async asyncData ({ $axios, params, redirect, store }) {
+  async asyncData ({ $axios, params, redirect, store, route }) {
     const { data } = await listImageByAid($axios, params.aid)
     if (data.length === 0) {
       redirect('/404')
@@ -69,7 +69,12 @@ export default {
     return {
       images,
       data,
-      showAlert: store.state.config.showAlert,
+      hiddenViewTip: !store.state.config.hiddenViewTip,
+      config: {
+        url: 'https://www.mnxjj.com' + route.path,
+        title: data[0].title + ' - 美女小姐姐写真网，美女图片每日更新',
+        image: store.state.config.imageDomain + data[0].path
+      },
       breadcrumbs: [
         {
           text: '主页',
@@ -108,8 +113,8 @@ export default {
     }
   },
   methods: {
-    setShowAlert (showAlert) {
-      this.$cookies.set('showAlert', showAlert ? 1 : 0, {
+    setHiddenViewTip (hiddenViewTip) {
+      this.$cookies.set('hiddenViewTip', hiddenViewTip ? 1 : 0, {
         path: '/',
         maxAge: 60 * 60 * 24 * 30
       })
@@ -126,7 +131,7 @@ export default {
     return {
       title: this.data[0].title,
       meta: [
-        { hid: 'description', name: 'description', content: +'‘' + this.data[0].title + '’我爱大姐姐写真网(wadjj.xyz)提供图片浏览。' }
+        { hid: 'description', name: 'description', content: +'‘' + this.data[0].title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。' }
       ]
     }
   }

@@ -1,8 +1,8 @@
 import { pageByQuery } from '@/api/album'
 export const actions = {
   async nuxtServerInit ({ commit }, { $axios, app }) {
-    const showAlert = app.$cookies.get('showAlert') === 1
-    commit('config/SET_SHOW_ALERT', showAlert)
+    const hiddenViewTip = app.$cookies.get('hiddenViewTip') === 1
+    commit('config/SET_HIDDEN_VIEW_TIP', hiddenViewTip)
     const dark = app.$cookies.get('dark') === 1
     commit('config/SET_DARK', dark)
     const pageQuery = {

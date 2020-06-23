@@ -141,7 +141,7 @@ export default {
       menus: this.$store.state.config.menus,
       right: true,
       rightDrawer: false,
-      title: '我爱大姐姐写真网',
+      title: '美女小姐姐写真网',
       ky: undefined,
       footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
     }

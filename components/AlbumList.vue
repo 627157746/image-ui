@@ -42,7 +42,7 @@
                   <v-icon color="white" dense>
                     mdi-image
                   </v-icon>
-                  {{ album.count }}张
+                  {{ album.count }}P
                 </div>
               </div>
               <template v-slot:placeholder>

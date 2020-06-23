@@ -6,7 +6,7 @@ export default ({ app: { router } }) => {
       const _hmt = _hmt || [];
       (function () {
         const hm = document.createElement('script')
-        hm.src = 'https://hm.baidu.com/hm.js?ead38de440a222a33b3c3c0024d4a27b'
+        hm.src = 'https://hm.baidu.com/hm.js?414a44bda63fd650aa9a01be67ceb784'
         const s = document.getElementsByTagName('script')[0]
         s.parentNode.insertBefore(hm, s)
       })()
