@@ -33,14 +33,14 @@
           </v-subheader>
         </div>
         <v-alert
-          v-model="hiddenViewTip"
+          v-model="showAlert"
           outlined
           dismissible
           class="ma-3"
           dense
           icon="mdi-info"
           type="success"
-          @input="setHiddenViewTip"
+          @input="setShowAlert"
         >
           点击图片开启预览模式
         </v-alert>
@@ -70,12 +70,13 @@
             width="100%"
             height="100%"
             objectFitImages
-            :src="$store.state.config.imageDomain+image"
+            :src="imageDomain+image"
             :style="index!=0?{'display':'none'}:{}"
           >
         </viewer>
         <v-btn class="mt-3" text>
-          <v-icon>mdi-share</v-icon>分享到:
+          <v-icon>mdi-share</v-icon>
+          分享到:
         </v-btn>
         <share :config="config" class="pb-3 px-3" />
       </v-card>
@@ -89,6 +90,7 @@
 <script>
 import Hot from '@/components/Hot'
 import { listImageByAid } from '@/api/album'
+
 export default {
   components: {
     Hot
@@ -107,13 +109,6 @@ export default {
     return {
       images,
       data,
-      notAuth: !store.state.auth.token,
-      hiddenViewTip: !store.state.config.hiddenViewTip,
-      config: {
-        url: 'https://www.mnxjj.com' + route.path,
-        title: data.title + ' - 美女小姐姐写真网，美女图片每日更新',
-        image: store.state.config.imageDomain + data.path
-      },
       breadcrumbs: [
         {
           text: '主页',
@@ -141,6 +136,29 @@ export default {
   validate ({ params, query }) {
     return /^\d+$/.test(params.aid)
   },
+  computed: {
+    config () {
+      return {
+        url: 'https://www.mnxjj.com' + this.$route.path,
+        title: this.data.title + ' - 美女小姐姐写真网，美女图片每日更新',
+        image: this.$store.state.config.imageDomain + this.data.images[0]
+      }
+    },
+    imageDomain () {
+      return this.$store.state.config.imageDomain
+    },
+    notAuth () {
+      return !this.$store.state.auth.token
+    },
+    showAlert: {
+      get () {
+        return this.$store.state.config.showAlert
+      },
+      set () {
+
+      }
+    }
+  },
   mounted () {
     if (this.data.images.length > 15) {
       const lazyImageArr = this.chunk(this.data.images, 15)
@@ -152,11 +170,12 @@ export default {
     }
   },
   methods: {
-    setHiddenViewTip (hiddenViewTip) {
-      this.$cookies.set('hiddenViewTip', hiddenViewTip ? 1 : 0, {
+    setShowAlert () {
+      this.$cookies.set('showAlert', 0, {
         path: '/',
         maxAge: 60 * 60 * 24 * 30
       })
+      this.$store.commit('config/SET_SHOW_ALERT', false)
     },
     chunk (arr, size) {
       const arr2 = []
@@ -170,7 +189,11 @@ export default {
     return {
       title: this.data.title,
       meta: [
-        { hid: 'description', name: 'description', content: +'‘' + this.data.title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。' }
+        {
+          hid: 'description',
+          name: 'description',
+          content: +'‘' + this.data.title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。'
+        }
       ]
     }
   }

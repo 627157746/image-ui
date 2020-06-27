@@ -6,13 +6,13 @@
       app
     >
       <v-list>
-        <template v-if="this.$store.state.auth.token">
+        <template v-if="auth">
           <v-list-item>
             <v-list-item-action>
               <v-icon>mdi-account</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="this.$store.state.auth.nickname" />
+              <v-list-item-title v-text="nickname" />
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="logout">
@@ -25,7 +25,33 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-divider />
         </template>
+        <template v-if="!auth">
+          <v-list-item nuxt link to="/login">
+            <v-list-item-action>
+              <v-icon>mdi-login</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                登录
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item nuxt link to="/register">
+            <v-list-item-action>
+              <v-icon>mdi-account-plus-outline</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                注册
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider />
+        </template>
+      </v-list>
+      <v-list>
         <v-list-item
           to="/"
           nuxt
@@ -54,31 +80,9 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
-        <template v-if="!this.$store.state.auth.token">
-          <v-list-item>
-            <v-list-item-action>
-              <v-icon>mdi-chart-bubble</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                登录
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-action>
-              <v-icon>mdi-chart-bubble</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                注册
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
         <v-list-item>
           <v-list-item-action>
-            <v-icon>mdi-apps</v-icon>
+            <v-icon>mdi-brightness-4</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
@@ -104,9 +108,22 @@
         />
       </template>
       <v-app-bar-nav-icon :class="drawer?'':'hidden-md-and-up'" @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="hidden-sm-and-down">
-        <v-btn text nuxt link to="/">
-          {{ title }}
+      <v-toolbar-title
+        class="hidden-sm-and-down"
+      >
+        <v-btn
+          depressed
+          height="60"
+          width="150"
+          text
+          @click="toHome"
+        >
+          <v-img
+            :src="logo"
+            height="60"
+            width="150"
+            contain
+          />
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
@@ -130,7 +147,7 @@
         />
       </v-toolbar-title>
       <v-spacer />
-      <template v-if="this.$store.state.auth.token">
+      <template v-if="auth">
         <v-menu>
           <template v-slot:activator="{ on, attrs}">
             <v-btn
@@ -213,19 +230,36 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      menus: this.$store.state.config.menus,
       right: true,
       rightDrawer: false,
       title: '美女小姐姐写真网',
-      nickname: this.$store.state.auth.nickname,
-      ky: undefined,
-      footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
+      ky: undefined
+    }
+  },
+  computed: {
+    auth () {
+      return this.$store.state.auth.token
+    },
+    menus () {
+      return this.$store.state.config.menus
+    },
+    nickname () {
+      return this.$store.state.auth.nickname
+    },
+    footer () {
+      return new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
+    },
+    logo () {
+      return this.$store.state.config.imageDomain + '/images/logo.png'
     }
   },
   created () {
     this.$vuetify.theme.dark = this.$store.state.config.dark
   },
   methods: {
+    toHome () {
+      this.$router.push('/')
+    },
     dark (dark) {
       this.$cookies.set('dark', dark ? 1 : 0, {
         path: '/',

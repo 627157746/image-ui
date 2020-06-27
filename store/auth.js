@@ -1,5 +1,6 @@
 import qs from 'qs'
 import { login, logout } from '@/api/user'
+const jwt = require('jwt-simple')
 export const state = () => ({
   nickname: undefined,
   token: undefined
@@ -24,7 +25,6 @@ export const actions = {
             path: '/',
             maxAge: 60 * 60 * 24 * 7
           })
-          const jwt = require('jwt-simple')
           const { nickname } = jwt.decode(token, 'mnxjj.com', true)
           commit('SET_TOKEN', token)
           commit('SET_NICKNAME', nickname)
@@ -52,7 +52,6 @@ export const actions = {
   getUserInfo ({ commit }, token) {
     return new Promise((resolve, reject) => {
       try {
-        const jwt = require('jwt-simple')
         const { nickname } = jwt.decode(token, 'mnxjj.com', true)
         commit('SET_TOKEN', token)
         commit('SET_NICKNAME', nickname)
@@ -61,6 +60,7 @@ export const actions = {
         this.$cookies.remove('token')
         commit('SET_TOKEN', undefined)
         commit('SET_NICKNAME', undefined)
+        reject(e)
       }
     })
   },

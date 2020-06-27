@@ -3,7 +3,12 @@
     <v-col lg="9" md="12">
       <v-card>
         <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
-        <order :order="pageQuery.o" :tid="pageQuery.t" />
+        <order
+          :order="pageQuery.o"
+          :tid="pageQuery.t"
+          @order="setOrder"
+          @tid="setT"
+        />
         <album-list :page-data="data" :tid="pageQuery.t" :o="pageQuery.o" />
       </v-card>
     </v-col>
@@ -49,6 +54,14 @@ export default {
           href: '/t/' + data.records[0].tid
         }
       ]
+    }
+  },
+  methods: {
+    setOrder (v) {
+      this.pageQuery.o = v
+    },
+    setT (v) {
+      this.pageQuery.t = v
     }
   },
   validate ({ params, query }) {

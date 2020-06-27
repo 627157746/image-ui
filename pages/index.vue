@@ -8,6 +8,7 @@
           </v-icon>
           最新更新
         </v-card-title>
+        <order :not-show-order="true" />
         <album-list :page-data="data" />
       </v-card>
     </v-col>
@@ -19,10 +20,12 @@
 
 <script>
 import Hot from '@/components/Hot'
+import Order from '@/components/Order'
 import AlbumList from '@/components/AlbumList'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
+    Order,
     Hot,
     AlbumList
   },

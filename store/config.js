@@ -28,17 +28,21 @@ export const state = () => ({
   ],
   hot: [],
   imageDomain: 'https://cdn.mnxjj.com',
-  hiddenViewTip: false,
-  dark: false
+  showAlert: true,
+  dark: false,
+  display: 6
 })
 export const mutations = {
   SET_HOT: (state, hot) => {
     state.hot = hot
   },
-  SET_HIDDEN_VIEW_TIP: (state, hiddenViewTip) => {
-    state.hiddenViewTip = hiddenViewTip
+  SET_SHOW_ALERT: (state, showAlert) => {
+    state.showAlert = showAlert
   },
   SET_DARK: (state, dark) => {
     state.dark = dark
+  },
+  SET_DISPLAY: (state, display) => {
+    state.display = display
   }
 }

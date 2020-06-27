@@ -64,20 +64,17 @@ export default {
     ]
   }),
   methods: {
-    login () {
+    async login () {
       const valid = this.$refs.form.validate()
       if (valid) {
         this.loading = true
-        this.$store.dispatch('auth/login', this.loginForm).then(() => {
-          this.loading = false
-          if (window.history.length <= 1) {
-            this.$router.push({ path: '/' })
-          } else {
-            this.$router.go(-1)
-          }
-        }).catch(() => {
-          this.loading = false
-        })
+        await this.$store.dispatch('auth/login', this.loginForm)
+        if (window.history.length <= 1) {
+          this.$router.push({ path: '/' })
+        } else {
+          this.$router.go(-1)
+        }
+        this.loading = false
       }
     }
   },

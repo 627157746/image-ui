@@ -27,13 +27,4 @@ export default function ({ $axios, redirect, app, store, error }) {
       }
     }
   })
-  $axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status)
-    if (code === 400 || code === 404) {
-      redirect('/404')
-    }
-    if (code === 500 || code === 504 || code === 502) {
-      redirect('/500')
-    }
-  })
 }

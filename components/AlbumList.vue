@@ -6,7 +6,7 @@
       xl="3"
       md="4"
       sm="6"
-      cols="12"
+      :cols="display"
     >
       <v-hover :disabled="false">
         <template v-slot="{ hover }">
@@ -21,7 +21,7 @@
               :alt="album.title"
               aspect-ratio="0.7"
               class="grey lighten-2 mx-auto"
-              :src="$store.state.config.imageDomain+album.cover"
+              :src="imageDomain+album.cover"
             >
               <div class="img-title white--text">
                 <div class="mx-2 text-truncate" to="/">
@@ -92,6 +92,7 @@
         :tid="tid"
         :o="o"
         :ky="ky"
+        @current="setCurrent"
       />
     </v-col>
   </v-row>
@@ -134,24 +135,17 @@ export default {
       imageSize: {
         width: '100%'
       },
-      totalVisible: 7,
-      mobile: this.$store.state.config.isMobile
+      totalVisible: 7
     }
   },
-  // computed: {
-  //   height () {
-  //     if (this.mobile) {
-  //       return 500
-  //     }
-  //     return 370
-  //   },
-  //   hoverDisabile () {
-  //     if (this.mobile) {
-  //       return true
-  //     }
-  //     return false
-  //   }
-  // },
+  computed: {
+    imageDomain () {
+      return this.$store.state.config.imageDomain
+    },
+    display () {
+      return this.$store.state.config.display
+    }
+  },
 
   methods: {
     toPage (page) {
@@ -160,6 +154,9 @@ export default {
       } else {
         this.$router.push({ name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } })
       }
+    },
+    setCurrent (v) {
+      this.pageData.current = v
     }
   }
 }

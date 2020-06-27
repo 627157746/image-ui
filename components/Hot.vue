@@ -19,7 +19,7 @@
               nuxt
               link
               :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
-              :src="$store.state.config.imageDomain+album.cover"
+              :src="imageDomain+album.cover"
             />
           </v-carousel>
         </v-card>
@@ -75,9 +75,12 @@
 
 <script>
 export default {
-  data () {
-    return {
-      hot: this.$store.state.config.hot
+  computed: {
+    hot () {
+      return this.$store.state.config.hot
+    },
+    imageDomain () {
+      return this.$store.state.config.imageDomain
     }
   }
 }

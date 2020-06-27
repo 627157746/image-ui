@@ -15,7 +15,7 @@ export default {
       { hid: 'description', name: 'description', content: '美女小姐姐写真网(https://www.mnxjj.com)每日分享最新最全的妹子图片和高清性感美女图片，包括性感妹子、日本妹子、台湾妹子、清纯妹子、COSER。' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: 'https://cdn.mnxjj.com/images/favicon.ico' }
     ]
   },
   /*
