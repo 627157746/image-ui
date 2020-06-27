@@ -1,6 +1,10 @@
 import { pageByQuery } from '@/api/album'
 export const actions = {
-  async nuxtServerInit ({ commit }, { $axios, app }) {
+  async nuxtServerInit ({ commit, dispatch }, { $axios, app }) {
+    const token = app.$cookies.get('token')
+    if (token) {
+      await dispatch('auth/getUserInfo', token)
+    }
     const hiddenViewTip = app.$cookies.get('hiddenViewTip') === 1
     commit('config/SET_HIDDEN_VIEW_TIP', hiddenViewTip)
     const dark = app.$cookies.get('dark') === 1

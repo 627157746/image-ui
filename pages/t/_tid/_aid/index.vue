@@ -2,11 +2,35 @@
   <v-row>
     <v-col lg="9" md="12">
       <v-card>
-        <v-card-title class="hidden-sm-and-down">
-          <v-breadcrumbs :items="breadcrumbs" />
-        </v-card-title>
-        <div class="title mx-3 mb-3">
-          {{ data[0].title }}
+        <v-breadcrumbs class="hidden-xs-only" :items="breadcrumbs" />
+        <div class="pt-3 text-center px-2">
+          {{ data.title }}
+        </div>
+        <div class="d-flex mx-auto" style="max-width:500px;flex-wrap: wrap">
+          <v-subheader>
+            <v-icon dense>
+              mdi-eye
+            </v-icon>
+            :{{ data.hits }}
+          </v-subheader>
+          <v-subheader>
+            <v-icon dense>
+              mdi-image
+            </v-icon>
+            :{{ data.count }}P
+          </v-subheader>
+          <v-subheader>
+            <v-icon dense>
+              mdi-shape-outline
+            </v-icon>
+            :{{ data.typeName }}
+          </v-subheader>
+          <v-subheader>
+            <v-icon dense>
+              mdi-clock-outline
+            </v-icon>
+            :{{ data.createTime|formatDate(true) }}
+          </v-subheader>
         </div>
         <v-alert
           v-model="hiddenViewTip"
@@ -20,6 +44,18 @@
         >
           点击图片开启预览模式
         </v-alert>
+        <template v-if="notAuth">
+          <v-subheader class="pa-1">
+            <v-btn class="mx-auto" text nuxt to="/login" color="success">
+              登录后可以浏览本套图的所有图片。。。
+            </v-btn>
+          </v-subheader>
+          <v-subheader class="pa-1 mb-2">
+            <v-btn class="mx-auto" text nuxt to="/register" color="pink">
+              没有账号?立即注册
+            </v-btn>
+          </v-subheader>
+        </template>
         <viewer
           ref="viewer"
           :images="images"
@@ -29,17 +65,19 @@
           <img
             v-for="(image,index) in images"
             :key="image.id"
+            :alt="data.title"
+            :title="data.title"
             width="100%"
             height="100%"
             objectFitImages
-            :src="$store.state.config.imageDomain+image.path"
+            :src="$store.state.config.imageDomain+image"
             :style="index!=0?{'display':'none'}:{}"
           >
         </viewer>
-        <v-btn class="mt-3" icon>
-          <v-icon>mdi-share</v-icon>
+        <v-btn class="mt-3" text>
+          <v-icon>mdi-share</v-icon>分享到:
         </v-btn>
-        <share :config="config" class="pb-3" />
+        <share :config="config" class="pb-3 px-3" />
       </v-card>
     </v-col>
     <v-col class="hidden-md-and-down" lg="3" md="0">
@@ -57,23 +95,24 @@ export default {
   },
   async asyncData ({ $axios, params, redirect, store, route }) {
     const { data } = await listImageByAid($axios, params.aid)
-    if (data.length === 0) {
+    if (data === null) {
       redirect('/404')
     }
     let images = []
-    if (data.length > 15) {
-      images = data.slice(0, 15)
+    if (data.images.length > 15) {
+      images = data.images.slice(0, 15)
     } else {
-      images = data
+      images = data.images
     }
     return {
       images,
       data,
+      notAuth: !store.state.auth.token,
       hiddenViewTip: !store.state.config.hiddenViewTip,
       config: {
         url: 'https://www.mnxjj.com' + route.path,
-        title: data[0].title + ' - 美女小姐姐写真网，美女图片每日更新',
-        image: store.state.config.imageDomain + data[0].path
+        title: data.title + ' - 美女小姐姐写真网，美女图片每日更新',
+        image: store.state.config.imageDomain + data.path
       },
       breadcrumbs: [
         {
@@ -82,14 +121,14 @@ export default {
           href: '/'
         },
         {
-          text: data[0].typeName,
+          text: data.typeName,
           disabled: false,
-          href: '/t/' + data[0].tid
+          href: '/t/' + data.tid
         },
         {
-          text: data[0].title,
+          text: data.title,
           disabled: true,
-          href: '/t/' + data[0].tid + '/' + data[0].id
+          href: '/t/' + data.tid + '/' + data.id
         }
       ]
     }
@@ -103,8 +142,8 @@ export default {
     return /^\d+$/.test(params.aid)
   },
   mounted () {
-    if (this.data.length > 15 && this.tid !== 5) {
-      const lazyImageArr = this.chunk(this.data, 15)
+    if (this.data.images.length > 15) {
+      const lazyImageArr = this.chunk(this.data.images, 15)
       lazyImageArr.forEach((element, index) => {
         setTimeout(() => {
           this.images = this.images.concat(element)
@@ -121,7 +160,7 @@ export default {
     },
     chunk (arr, size) {
       const arr2 = []
-      for (let i = 20; i < arr.length; i = i + size) {
+      for (let i = 15; i < arr.length; i = i + size) {
         arr2.push(arr.slice(i, i + size))
       }
       return arr2
@@ -129,9 +168,9 @@ export default {
   },
   head () {
     return {
-      title: this.data[0].title,
+      title: this.data.title,
       meta: [
-        { hid: 'description', name: 'description', content: +'‘' + this.data[0].title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。' }
+        { hid: 'description', name: 'description', content: +'‘' + this.data.title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。' }
       ]
     }
   }

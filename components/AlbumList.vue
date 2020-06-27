@@ -18,6 +18,7 @@
             :to="{ name: 't-tid-aid', params: { tid: album.tid,aid: album.id }}"
           >
             <v-img
+              :alt="album.title"
               aspect-ratio="0.7"
               class="grey lighten-2 mx-auto"
               :src="$store.state.config.imageDomain+album.cover"

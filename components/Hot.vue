@@ -8,6 +8,7 @@
           <v-carousel
             class="mb-6"
             cycle
+            height="400"
             interval="3000"
             show-arrows-on-hover
             hide-delimiter-background

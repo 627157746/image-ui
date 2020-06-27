@@ -6,6 +6,26 @@
       app
     >
       <v-list>
+        <template v-if="this.$store.state.auth.token">
+          <v-list-item>
+            <v-list-item-action>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="this.$store.state.auth.nickname" />
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="logout">
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                注销
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
         <v-list-item
           to="/"
           nuxt
@@ -34,6 +54,28 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <template v-if="!this.$store.state.auth.token">
+          <v-list-item>
+            <v-list-item-action>
+              <v-icon>mdi-chart-bubble</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                登录
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-action>
+              <v-icon>mdi-chart-bubble</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                注册
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
         <v-list-item>
           <v-list-item-action>
             <v-icon>mdi-apps</v-icon>
@@ -87,6 +129,39 @@
           @click:append="serach"
         />
       </v-toolbar-title>
+      <v-spacer />
+      <template v-if="this.$store.state.auth.token">
+        <v-menu>
+          <template v-slot:activator="{ on, attrs}">
+            <v-btn
+              class="hidden-sm-and-down"
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-account</v-icon>
+              {{ nickname }}
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="logout">
+              注销
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+      <template v-else>
+        <v-toolbar-title class="hidden-sm-and-down">
+          <v-btn text nuxt link to="/login">
+            登录
+          </v-btn>
+        </v-toolbar-title>
+        <v-toolbar-title class="hidden-sm-and-down">
+          <v-btn text nuxt link to="/register">
+            注册
+          </v-btn>
+        </v-toolbar-title>
+      </template>
       <v-spacer />
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
@@ -142,6 +217,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: '美女小姐姐写真网',
+      nickname: this.$store.state.auth.nickname,
       ky: undefined,
       footer: new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
     }
@@ -163,6 +239,10 @@ export default {
       } else {
         this.$toasted.show('请输入关键字。。。')
       }
+    },
+    async logout () {
+      await this.$store.dispatch('auth/logout')
+      this.$router.push('/login')
     }
   }
 }

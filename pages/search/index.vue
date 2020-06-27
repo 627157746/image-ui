@@ -2,9 +2,7 @@
   <v-row>
     <v-col lg="9" md="12">
       <v-card>
-        <v-card-title class="hidden-sm-and-down">
-          <v-breadcrumbs :items="breadcrumbs" />
-        </v-card-title>
+        <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
         <order :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
         <album-list
           :page-data="data"

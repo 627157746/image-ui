@@ -64,9 +64,12 @@ export default {
   */
   axios: {
     prefix: '/api',
-    proxy: true,
     credentials: true,
+    proxy: true,
     debug: false
+  },
+  router: {
+    middleware: 'auth'
   },
   proxy: {
     '/api': { target: 'http://localhost:8080', pathRewrite: { '^/api/': '' } }
