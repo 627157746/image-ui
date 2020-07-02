@@ -79,34 +79,36 @@
 <script>
 import { register } from '@/api/user'
 export default {
-  data: () => ({
-    valid: true,
-    loading: false,
-    captchaUrl: '/api/users/captcha?' + new Date(),
-    registerForm: {
-      email: undefined,
-      nickname: undefined,
-      password: undefined,
-      captcha: undefined,
-      passwords: undefined
-    },
-    passwordShow: false,
-    emailRules: [
-      v => !!v || '登录邮箱不能为空',
-      v => /.+@.+\..+/.test(v) || '不是正确的邮箱'
-    ],
-    nicknameRules: [
-      v => !!v || '昵称不能为空',
-      v => (v && v.length >= 3 && v.length <= 8) || '昵称不能少于3位大于8位'
-    ],
-    passwordRules: [
-      v => !!v || '密码不能为空',
-      v => (v && v.length >= 7 && v.length <= 20) || '密码不能少于7大于20位'
-    ],
-    captchaRules: [
-      v => !!v || '验证码不能为空'
-    ]
-  }),
+  data () {
+    return {
+      valid: true,
+      loading: false,
+      captchaUrl: '/api/users/captcha?' + new Date(),
+      registerForm: {
+        email: undefined,
+        nickname: undefined,
+        password: undefined,
+        captcha: undefined,
+        passwords: undefined
+      },
+      passwordShow: false,
+      emailRules: [
+        v => !!v || '登录邮箱不能为空',
+        v => /.+@.+\..+/.test(v) || '不是正确的邮箱'
+      ],
+      nicknameRules: [
+        v => !!v || '昵称不能为空',
+        v => (v && v.length >= 3 && v.length <= 8) || '昵称不能少于3位大于8位'
+      ],
+      passwordRules: [
+        v => !!v || '密码不能为空',
+        v => (v && v.length >= 7 && v.length <= 20) || '密码不能少于7大于20位'
+      ],
+      captchaRules: [
+        v => !!v || '验证码不能为空'
+      ]
+    }
+  },
   computed: {
     passwordsRules () {
       const rules = []

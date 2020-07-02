@@ -142,8 +142,8 @@
           hide-details
           dense
           solo
-          @keyup.13="serach"
-          @click:append="serach"
+          @keyup.13="search"
+          @click:append="search"
         />
       </v-toolbar-title>
       <v-spacer />
@@ -266,7 +266,7 @@ export default {
         maxAge: 60 * 60 * 24 * 30
       })
     },
-    serach () {
+    search () {
       this.$refs.search.blur()
       if (this.ky) {
         this.$router.push({ name: 'search', query: { ky: this.ky } })
@@ -274,9 +274,10 @@ export default {
         this.$toasted.show('请输入关键字。。。')
       }
     },
-    async logout () {
-      await this.$store.dispatch('auth/logout')
-      this.$router.push('/login')
+    logout () {
+      this.$store.dispatch('auth/logout').then(() => {
+        this.$router.push('/login')
+      })
     }
   }
 }

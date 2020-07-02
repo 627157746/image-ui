@@ -10,6 +10,11 @@
       style="max-width:500px"
       lazy-validation
     >
+      <template v-if="error">
+        <v-alert dense type="error">
+          {{ error }}
+        </v-alert>
+      </template>
       <v-text-field
         v-model="loginForm.username"
         append-icon="mdi-email"
@@ -46,35 +51,46 @@
 
 <script>
 export default {
-  data: () => ({
-    valid: true,
-    loading: false,
-    loginForm: {
-      username: '',
-      password: ''
-    },
-    passwordShow: false,
-    emailRules: [
-      v => !!v || '登录邮箱不能为空',
-      v => /.+@.+\..+/.test(v) || '不是正确的邮箱'
-    ],
-    passwordRules: [
-      v => !!v || '密码不能为空',
-      v => (v && v.length > 7) || '密码不能少于7位'
-    ]
-  }),
+  data () {
+    return {
+      valid: true,
+      loading: false,
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      passwordShow: false,
+      emailRules: [
+        v => !!v || '登录邮箱不能为空',
+        v => /.+@.+\..+/.test(v) || '不是正确的邮箱'
+      ],
+      passwordRules: [
+        v => !!v || '密码不能为空',
+        v => (v && v.length > 7) || '密码不能少于7位'
+      ]
+    }
+  },
+  computed: {
+    error () {
+      const error = this.$route.query.error
+      return error ? '登录失效，请重新登录' : undefined
+    }
+  },
   methods: {
-    async login () {
+    login () {
       const valid = this.$refs.form.validate()
       if (valid) {
         this.loading = true
-        await this.$store.dispatch('auth/login', this.loginForm)
-        if (window.history.length <= 1) {
-          this.$router.push({ path: '/' })
-        } else {
-          this.$router.go(-1)
-        }
-        this.loading = false
+        this.$store.dispatch('auth/login', this.loginForm).then(() => {
+          if (window.history.length <= 1) {
+            this.$router.push({ path: '/' })
+          } else {
+            this.$router.go(-1)
+          }
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
+        })
       }
     }
   },

@@ -23,7 +23,7 @@ export const actions = {
           const token = res.data
           this.$cookies.set('token', token, {
             path: '/',
-            maxAge: 60 * 60 * 24 * 7
+            maxAge: 60 * 60 * 24 * 6.5
           })
           const { nickname } = jwt.decode(token, 'mnxjj.com', true)
           commit('SET_TOKEN', token)
@@ -38,14 +38,17 @@ export const actions = {
     })
   },
   logout ({ commit }) {
-    return new Promise((resolve, reject) => {
-      logout(this.$axios).then((res) => {
+    return new Promise((resolve) => {
+      logout(this.$axios).then(() => {
         commit('SET_TOKEN', undefined)
         commit('SET_NICKNAME', undefined)
         this.$cookies.remove('token')
         resolve()
-      }).catch((error) => {
-        reject(error)
+      }).catch(() => {
+        commit('SET_TOKEN', undefined)
+        commit('SET_NICKNAME', undefined)
+        this.$cookies.remove('token')
+        resolve()
       })
     })
   },

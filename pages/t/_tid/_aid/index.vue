@@ -95,10 +95,11 @@ export default {
   components: {
     Hot
   },
-  async asyncData ({ $axios, params, redirect, store, route }) {
+  async asyncData ({ $axios, params, redirect }) {
     const { data } = await listImageByAid($axios, params.aid)
     if (data === null) {
       redirect('/404')
+      return
     }
     let images = []
     if (data.images.length > 15) {

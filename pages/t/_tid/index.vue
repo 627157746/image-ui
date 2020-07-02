@@ -38,6 +38,7 @@ export default {
     const { data } = await pageByQuery($axios, pageQuery)
     if (data.records.length === 0) {
       redirect('/404')
+      return
     }
     return {
       data,
