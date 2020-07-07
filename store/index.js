@@ -1,7 +1,8 @@
 import { pageByQuery } from '@/api/album'
+import { getToken } from '@/util/token'
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { $axios, app, error }) {
-    const token = app.$cookies.get('token')
+    const token = getToken(app.$cookies)
     if (token) {
       try {
         await dispatch('auth/getUserInfo', token)

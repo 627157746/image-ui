@@ -1,15 +1,15 @@
 <template>
-  <v-card>
-    <h1 class="text-center">
-      注册账号
-    </h1>
+  <v-card height="100%">
     <v-form
       ref="form"
       v-model="valid"
-      class="mx-auto pa-3"
+      class="mx-auto pa-3 pt-sm-12"
       style="max-width:500px"
       lazy-validation
     >
+      <h1 class="text-center">
+        注册账号
+      </h1>
       <v-text-field
         v-model="registerForm.email"
         append-icon="mdi-email"

@@ -1,15 +1,15 @@
 <template>
-  <v-card>
-    <h1 class="text-center">
-      登录
-    </h1>
+  <v-card height="100%">
     <v-form
       ref="form"
       v-model="valid"
-      class="mx-auto pa-3"
+      class="mx-auto pa-3 pt-sm-12"
       style="max-width:500px"
       lazy-validation
     >
+      <h1 class="text-center">
+        登录
+      </h1>
       <template v-if="error">
         <v-alert dense type="error">
           {{ error }}
@@ -38,6 +38,9 @@
         @click="login"
       >
         登录
+      </v-btn>
+      <v-btn text nuxt to="/user/forget" color="blue">
+        忘记密码
       </v-btn>
       <v-subheader class="my-3">
         没有账号?立即

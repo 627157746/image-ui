@@ -94,6 +94,9 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          联系邮箱:admin@mnxjj.com
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -164,6 +167,13 @@
             <v-list-item @click="logout">
               注销
             </v-list-item>
+            <v-list-item
+              link
+              nuxt
+              to="/user/pwd"
+            >
+              修改密码
+            </v-list-item>
           </v-list>
         </v-menu>
       </template>
@@ -204,7 +214,7 @@
       </v-menu>
     </v-app-bar>
     <v-content>
-      <v-container>
+      <v-container style="height:100%">
         <nuxt />
       </v-container>
     </v-content>
@@ -247,7 +257,7 @@ export default {
       return this.$store.state.auth.nickname
     },
     footer () {
-      return new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。'
+      return new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。联系邮箱:admin@mnxjj.com'
     },
     logo () {
       return this.$store.state.config.imageDomain + '/images/logo.png'

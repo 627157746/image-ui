@@ -142,7 +142,8 @@ export default {
       return {
         url: 'https://www.mnxjj.com' + this.$route.path,
         title: this.data.title + ' - 美女小姐姐写真网，美女图片每日更新',
-        image: this.$store.state.config.imageDomain + this.data.images[0]
+        image: this.$store.state.config.imageDomain + this.data.images[0],
+        sites: ['qq', 'weibo', 'wechat', 'douban', 'facebook', 'twitter']
       }
     },
     imageDomain () {
