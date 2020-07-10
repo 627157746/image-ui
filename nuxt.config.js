@@ -36,7 +36,8 @@ export default {
     { src: '@/plugins/v-viewer' },
     { src: '@/plugins/baidu-count' },
     { src: '@/plugins/share', ssr: false },
-    { src: '@/plugins/axios' }
+    { src: '@/plugins/axios' },
+    { src: '@/plugins/video' }
   ],
   /*
   ** Nuxt.js dev-modules
