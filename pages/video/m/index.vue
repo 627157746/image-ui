@@ -1,6 +1,6 @@
 <template>
   <div class="container-box">
-    <div class="van-swipe">
+    <div v-if="videos" class="van-swipe">
       <van-swipe
         :initial-swipe="initial"
         :show-indicators="false"
@@ -17,26 +17,44 @@
             class="video-box"
             loop
             :src="item"
-            :playOrPause="playOrPause"
+            preload
             @click="pauseVideo"
-            @ended="onPlayerEnded($event)"
           />
           <img
             v-show="iconPlayShow"
             class="icon-play"
-            src="http://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
-            @click="playvideo"
+            src="https://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
+            @click="playVideo"
           >
+          <div class="tools-right">
+            <div class="tools-r-li">
+              <v-btn icon :disabled="disableLike(item)">
+                <v-icon large style="color:red" @click="like(item)">
+                  mdi-thumb-up
+                </v-icon>
+              </v-btn>
+            </div>
+            <div class="tools-r-li">
+              <v-btn icon :disabled="disableDislike(item)">
+                <v-icon large style="color:grey" @click="dislike(item)">
+                  mdi-thumb-down
+                </v-icon>
+              </v-btn>
+            </div>
+          </div>
         </van-swipe-item>
       </van-swipe>
+    </div>
+    <div v-else>
+      系统繁忙
     </div>
   </div>
 </template>
 
 <script>
 import { getList, score } from '@/api/video'
-let videoProcessInterval
 export default {
+  middleware: 'video-client',
   layout: 'video',
   async asyncData ({ $axios }) {
     const { data } = await getList($axios)
@@ -48,98 +66,67 @@ export default {
     return {
       initial: 0,
       current: 0,
-      isVideoShow: true,
-      playOrPause: true,
       video: null,
       iconPlayShow: true,
-      videoProcess: 0
+      likeList: [],
+      dislikeList: []
+    }
+  },
+  computed: {
+    disableLike () {
+      return function (url) {
+        return this.likeList.includes(url)
+      }
+    },
+    disableDislike () {
+      return function (url) {
+        return this.dislikeList.includes(url)
+      }
     }
   },
   mounted () {
     setTimeout(() => {
-      this.playvideo()
+      this.playVideo()
     }, 500)
   },
   methods: {
-    onChange (index) {
-      clearInterval(videoProcessInterval)
-      this.videoProcess = 0
-      const video = document.querySelectorAll('video')[this.current]
-      video.pause()
-      this.playOrPause = false
-      this.showShareBox = false
+    async onChange (index) {
+      this.video.pause()
+      this.video = document.querySelectorAll('video')[index]
       this.current = index
-      this.isVideoShow = false
       setTimeout(() => {
-        this.pauseVideo()
+        this.iconPlayShow = false
+        this.video.play()
       }, 100)
       if (this.videos.length - this.current <= 3) {
-        getList(this.$axios).then((res) => {
-          res.data.forEach((item) => {
-            this.videos.push(item)
-          })
-          this.initial = index
+        const { data } = await getList(this.$axios)
+        data.forEach((item) => {
+          this.videos.push(item)
         })
+        this.initial = index
       }
     },
     // 开始播放
-    playvideo (event) {
-      const video = document.querySelectorAll('video')[this.current]
-      this.isVideoShow = false
+    playVideo (event) {
+      this.video = document.querySelectorAll('video')[this.current]
       this.iconPlayShow = false
-      this.showShareBox = false
-      video.play()
-      if (this.isiOS) {
-        setTimeout(() => {
-          // 处理ios宽视频
-          const documentW = (document.documentElement.clientWidth || document.body.clientWidth)
-          const docB = parseFloat(video.videoWidth / documentW)
-          // 计算视频最适高度
-          const realH = parseInt(video.videoHeight / docB)
-          this.realH = realH + 'px'
-          this.$forceUpdate()
-        }, 200)
-      }
-      videoProcessInterval = setInterval(() => {
-        this.changeProcess(video)
-      }, 100)
+      this.video.play()
     },
     pauseVideo () { // 暂停\播放
-      try {
-        const video = document.querySelectorAll('video')[this.current]
-        if (this.playOrPause) {
-          video.pause()
+      if (this.video.paused) {
+        setTimeout(() => {
+          this.iconPlayShow = false
+          this.video.play()
+        }, 100)
+      } else {
+        setTimeout(() => {
           this.iconPlayShow = true
-          clearInterval(videoProcessInterval)
-        } else {
-          video.play()
-          video.pause()
-          setTimeout(() => {
-            video.play()
-            this.iconPlayShow = false
-            videoProcessInterval = setInterval(() => {
-              this.changeProcess(video)
-            }, 100)
-          }, 100)
-        }
-        this.playOrPause = !this.playOrPause
-        this.showShareBox = false
-      } catch (e) {
-        alert(e)
+          this.video.pause()
+        }, 100)
       }
     },
-    // 记录播放进度
-    changeProcess () {
-      const video = document.querySelectorAll('video')[this.current]
-      const currentTime = video.currentTime.toFixed(1)
-      const duration = video.duration.toFixed(1)
-      this.videoProcess = parseInt((currentTime / duration).toFixed(2) * 100)
-    },
-    onPlayerEnded (player) { // 视频结束
-      this.isVideoShow = true
-      this.current += this.current
-    },
     like (url) {
+      this.likeList.push(url)
       const data = {
         url,
         type: 1
@@ -147,17 +134,23 @@ export default {
       score(this.$axios, data)
     },
     dislike (url) {
+      this.dislikeList.push(url)
       const data = {
         url,
         type: 2
       }
       score(this.$axios, data)
     }
+  },
+  head () {
+    return {
+      title: '短视频'
+    }
   }
 }
 </script>
 
-<style>
+<style scope>
     .video-player {
         height: 100vh;
         width: 100vw;
@@ -180,7 +173,6 @@ export default {
     .container-box {
         width: 100vw;
         height: 100vh;
-        background: #000;
     }
     .video-box {
         object-fit: fill !important;
@@ -191,16 +183,17 @@ export default {
     video {
         object-position: 0 0;
     }
-    .icon-play {
+    .tools-right {
+        z-index: 1001;
         position: absolute;
-        top: 44%;
-        right: 0;
-        left: 0;
-        bottom: auto;
-        margin: auto;
-        z-index: 999;
-        height: 60px;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 50%;
+        right: 20px;
+        top: 40vh
+    }
+    .tools-r-li {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .tools-r-li:last-child {
+        margin-bottom: 0px;
     }
 </style>

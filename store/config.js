@@ -24,6 +24,11 @@ export const state = () => ({
       icon: 'mdi-chart-bubble',
       title: '台湾妹子',
       to: '/t/4'
+    },
+    {
+      icon: 'mdi-chart-bubble',
+      title: '短视频',
+      to: '/video/m'
     }
   ],
   hot: [],
@@ -44,5 +49,8 @@ export const mutations = {
   },
   SET_DISPLAY: (state, display) => {
     state.display = display
+  },
+  SET_CONFIG: (state, config) => {
+    state.imageDomain = config.imageDomain
   }
 }

@@ -1,4 +1,5 @@
 import { pageByQuery } from '@/api/album'
+// import { getConfig } from '@/api/config'
 import { getToken } from '@/util/token'
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { $axios, app, error }) {
@@ -21,6 +22,15 @@ export const actions = {
     const _display = app.$cookies.get('display')
     const display = _display || 6
     commit('config/SET_DISPLAY', display)
+    // try {
+    //   const { data } = await getConfig($axios)
+    //   commit('config/SET_CONFIG', data)
+    // } catch (e) {
+    //   error({
+    //     statusCode: 500,
+    //     message: '服务器繁忙'
+    //   })
+    // }
     const pageQuery = {
       pg: 1,
       pz: 10,

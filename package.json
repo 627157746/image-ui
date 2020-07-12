@@ -23,7 +23,6 @@
     "cookie-universal-nuxt": "^2.1.4",
     "jwt-simple": "^0.5.6",
     "vant": "^2.2.15",
-    "weixin-js-sdk": "^1.6.0",
     "nuxt": "^2.0.0",
     "v-viewer": "^1.5.1",
     "vue-social-share": "0.0.3",

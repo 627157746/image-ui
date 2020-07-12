@@ -18,3 +18,13 @@
 div::-webkit-scrollbar {
   width: 0;
 }
+.icon-play {
+  position: absolute;
+  top: 44%;
+  right: 0;
+  left: 0;
+  bottom: auto;
+  margin: auto;
+  z-index: 999;
+  height: 60px;
+}
