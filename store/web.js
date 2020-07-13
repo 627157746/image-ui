@@ -26,7 +26,7 @@ export const state = () => ({
       to: '/t/4'
     },
     {
-      icon: 'mdi-chart-bubble',
+      icon: 'mdi-video',
       title: '短视频',
       to: '/video/m'
     }
@@ -49,8 +49,5 @@ export const mutations = {
   },
   SET_DISPLAY: (state, display) => {
     state.display = display
-  },
-  SET_CONFIG: (state, config) => {
-    state.imageDomain = config.imageDomain
   }
 }

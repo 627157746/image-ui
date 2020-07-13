@@ -77,10 +77,10 @@
 export default {
   computed: {
     hot () {
-      return this.$store.state.config.hot
+      return this.$store.state.web.hot
     },
     imageDomain () {
-      return this.$store.state.config.imageDomain
+      return this.$store.state.web.imageDomain
     }
   }
 }

@@ -1,80 +1,119 @@
 <template>
   <v-card class="video-box d-flex justify-center align-center">
-    <transition name="fade">
-      <video
-        v-show="show"
-        ref="video"
-        class="video"
-        preload
-        :loop="loop"
-        :src="videos[0]"
-        @click="pauseVideo"
-        @ended="onPlayerEnded($event)"
-      />
-    </transition>
-    <div v-show="iconPlayShow">
-      <div class="mr-10 icon-play d-flex justify-center">
-        <v-btn fab dark large color="grey darken-3" @click="playVideo">
+    <template v-if="videos">
+      <div class="video" style="position: relative">
+        <transition name="fade">
+          <video
+            v-show="show&&!error"
+            ref="video"
+            class="video"
+            preload
+            :loop="loop"
+            :src="videos[0]"
+            @click="pauseVideo"
+            @ended="onPlayerEnded"
+            @error.prevent="videoLoadError"
+          />
+        </transition>
+        <transition name="fade">
+          <div v-show="error" class="load-error">
+            <v-card
+              class="load-error d-flex align-center justify-center"
+            >
+              <v-chip
+                color="red"
+                label
+                outlined
+              >
+                视频加载失败请切换视频或者刷新浏览器！
+              </v-chip>
+            </v-card>
+          </div>
+        </transition>
+        <div v-show="iconPlayShow&&!error" class="icon-play" style="left:50%">
+          <v-btn
+            fab
+            dark
+            large
+            color="grey darken-3"
+            @click="playVideo"
+          >
+            <v-icon>
+              mdi-play
+            </v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <div class="d-flex flex-column mx-5">
+        <v-btn
+          class="my-2"
+          fab
+          dark
+          large
+          color="pink"
+          :disabled="disableLike(videos[current])"
+          @click="like(videos[current])"
+        >
           <v-icon>
-            mdi-play
+            mdi-heart
           </v-icon>
         </v-btn>
+        <v-btn
+          class="my-2"
+          fab
+          dark
+          large
+          color="grey"
+          :disabled="disableDislike(videos[current])"
+          @click="dislike(videos[current])"
+        >
+          <v-icon>
+            mdi-thumb-down
+          </v-icon>
+        </v-btn>
+        <v-btn
+          v-ripple
+          class="my-2"
+          fab
+          dark
+          large
+          color="light-blue"
+          @click="changeVideo"
+        >
+          <v-icon>
+            mdi-autorenew
+          </v-icon>
+        </v-btn>
+        <v-btn
+          v-ripple
+          class="my-2"
+          fab
+          dark
+          large
+          color="light-green"
+          @click="fullscreenVideo"
+        >
+          <v-icon>
+            mdi-fullscreen
+          </v-icon>
+        </v-btn>
+        <v-switch
+          v-model="loop"
+          primary
+          color="orange"
+          label="循环播放"
+        />
       </div>
-    </div>
-    <div class="d-flex flex-column mx-5">
-      <v-btn
-        class="my-2"
-        fab
-        dark
-        large
-        color="pink"
-        :disabled="disableLike(videos[current])"
-        @click="like(videos[current])"
-      >
-        <v-icon>
-          mdi-thumb-up
-        </v-icon>
-      </v-btn>
-      <v-btn
-        class="my-2"
-        fab
-        dark
-        large
-        color="grey"
-        :disabled="disableDislike(videos[current])"
-        @click="dislike(videos[current])"
-      >
-        <v-icon>
-          mdi-thumb-down
-        </v-icon>
-      </v-btn>
-      <v-btn
-        v-ripple
-        class="my-2"
-        fab
-        dark
-        large
-        color="light-blue"
-        @click="changeVideo"
-      >
-        <v-icon>
-          mdi-autorenew
-        </v-icon>
-      </v-btn>
-      <v-switch
-        v-model="loop"
-        primary
-        color="orange"
-        label="循环播放"
-      />
+    </template>
+    <template v-else>
       <v-chip
         color="red"
         label
         outlined
       >
-        播放错误时请刷新浏览器！
+        无法获取到视频源请联系管理员
       </v-chip>
-    </div>
+    </template>
   </v-card>
 </template>
 
@@ -91,8 +130,9 @@ export default {
   data () {
     return {
       video: null,
-      loop: true,
+      loop: false,
       current: 0,
+      error: false,
       show: true,
       iconPlayShow: true,
       likeList: [],
@@ -118,10 +158,13 @@ export default {
   methods: {
     playVideo () {
       this.iconPlayShow = false
-      this.video.play()
+      setTimeout(() => {
+        this.video.play()
+      }, 100)
     },
     async changeVideo () {
       this.show = false
+      this.error = false
       setTimeout(() => {
         this.video.pause()
         this.iconPlayShow = false
@@ -150,8 +193,23 @@ export default {
         }, 100)
       }
     },
-    onPlayerEnded () { // 视频结束
+    onPlayerEnded () {
       this.changeVideo()
+    },
+    videoLoadError () {
+      this.error = true
+    },
+    fullscreenVideo () {
+      const video = this.video
+      if (video.requestFullScreen) {
+        video.requestFullScreen()
+      } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen()
+      } else if (video.webkitRequestFullScreen) {
+        video.webkitRequestFullScreen()
+      } else {
+        this.$toasted.show('抱歉您的浏览器不支持全屏播放')
+      }
     },
     like (url) {
       this.likeList.push(url)
@@ -181,8 +239,8 @@ export default {
 <style lang="scss" scoped>
 .video-box{
   height: 80vh;
-  .video{
-    object-fit: fill !important;
+  .video,.load-error{
+    // object-fit: fill !important;
     width: 480px;
     height: 100%;
   }

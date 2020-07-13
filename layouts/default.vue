@@ -151,7 +151,7 @@
       </v-toolbar-title>
       <v-spacer />
       <template v-if="auth">
-        <v-menu>
+        <v-menu transition="fab-transition">
           <template v-slot:activator="{ on, attrs}">
             <v-btn
               class="hidden-sm-and-down"
@@ -165,14 +165,28 @@
           </template>
           <v-list>
             <v-list-item @click="logout">
-              注销
+              <v-list-item-action>
+                <v-icon>mdi-logout</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  注销
+                </v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
             <v-list-item
               link
               nuxt
               to="/user/pwd"
             >
-              修改密码
+              <v-list-item-action>
+                <v-icon>mdi-lock-reset</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  修改密码
+                </v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -190,7 +204,7 @@
         </v-toolbar-title>
       </template>
       <v-spacer />
-      <v-menu>
+      <v-menu transition="fab-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             class="hidden-sm-and-down"
@@ -251,20 +265,20 @@ export default {
       return this.$store.state.auth.token
     },
     menus () {
-      return this.$store.state.config.menus
+      return this.$store.state.web.menus
     },
     nickname () {
       return this.$store.state.auth.nickname
     },
     footer () {
-      return new Date().getFullYear() + ' 本站纯属免费美女图片欣赏网站，所有图片均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。联系邮箱:admin@mnxjj.com'
+      return new Date().getFullYear() + ' 本站纯属免费美女图片和美女短视频欣赏网站，所有图片和视频均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。联系邮箱:admin@mnxjj.com'
     },
     logo () {
-      return this.$store.state.config.imageDomain + '/images/logo.png'
+      return this.$store.state.web.imageDomain + '/images/logo.png'
     }
   },
   created () {
-    this.$vuetify.theme.dark = this.$store.state.config.dark
+    this.$vuetify.theme.dark = this.$store.state.web.dark
   },
   methods: {
     toHome () {

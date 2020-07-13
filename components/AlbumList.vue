@@ -140,10 +140,10 @@ export default {
   },
   computed: {
     imageDomain () {
-      return this.$store.state.config.imageDomain
+      return this.$store.state.web.imageDomain
     },
     display () {
-      return this.$store.state.config.display
+      return this.$store.state.web.display
     }
   },
 

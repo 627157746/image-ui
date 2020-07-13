@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 d-flex .text-decoration-none">
+  <div class="px-3 d-flex text-decoration-none">
     <v-btn
       class="mx-2"
       text

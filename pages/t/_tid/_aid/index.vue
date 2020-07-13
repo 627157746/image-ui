@@ -142,19 +142,19 @@ export default {
       return {
         url: 'https://www.mnxjj.com' + this.$route.path,
         title: this.data.title + ' - 美女小姐姐写真网，美女图片每日更新',
-        image: this.$store.state.config.imageDomain + this.data.images[0],
+        image: this.$store.state.web.imageDomain + this.data.images[0],
         sites: ['qq', 'weibo', 'wechat', 'douban', 'facebook', 'twitter']
       }
     },
     imageDomain () {
-      return this.$store.state.config.imageDomain
+      return this.$store.state.web.imageDomain
     },
     notAuth () {
       return !this.$store.state.auth.token
     },
     showAlert: {
       get () {
-        return this.$store.state.config.showAlert
+        return this.$store.state.web.showAlert
       },
       set () {
 
@@ -177,7 +177,7 @@ export default {
         path: '/',
         maxAge: 60 * 60 * 24 * 30
       })
-      this.$store.commit('config/SET_SHOW_ALERT', false)
+      this.$store.commit('web/SET_SHOW_ALERT', false)
     },
     chunk (arr, size) {
       const arr2 = []

@@ -15,28 +15,47 @@
         >
           <video
             class="video-box"
+            webkit-playsinline="true"
+            playsinline="true"
+            x5-video-player-type="h5"
+            x5-video-player-fullscreen="true"
             loop
             :src="item"
-            preload
+            :preload="index===0?'auto':'none'"
             @click="pauseVideo"
+            @error.prevent="videoLoadError"
           />
+          <div v-if="isVideoLoadError(index)" class="icon-play">
+            <v-card
+              height="100%"
+              class="d-flex align-center justify-center"
+            >
+              <v-chip
+                color="red"
+                label
+                outlined
+              >
+                视频加载失败请切换视频或者刷新浏览器！
+              </v-chip>
+            </v-card>
+          </div>
           <img
             v-show="iconPlayShow"
             class="icon-play"
             src="https://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
             @click="playVideo"
           >
-          <div class="tools-right">
+          <div v-if="!isVideoLoadError(index)" class="tools-right">
             <div class="tools-r-li">
-              <v-btn icon :disabled="disableLike(item)">
-                <v-icon large style="color:red" @click="like(item)">
-                  mdi-thumb-up
+              <v-btn fab color="transparent" :disabled="disableLike(item)">
+                <v-icon large color="pink" @click="like(item)">
+                  mdi-heart
                 </v-icon>
               </v-btn>
             </div>
             <div class="tools-r-li">
-              <v-btn icon :disabled="disableDislike(item)">
-                <v-icon large style="color:grey" @click="dislike(item)">
+              <v-btn fab="" color="transparent" :disabled="disableDislike(item)">
+                <v-icon large color="grey darken-4" @click="dislike(item)">
                   mdi-thumb-down
                 </v-icon>
               </v-btn>
@@ -45,9 +64,15 @@
         </van-swipe-item>
       </van-swipe>
     </div>
-    <div v-else>
-      系统繁忙
-    </div>
+    <v-card v-else height="100%" class="d-flex justify-center align-center">
+      <v-chip
+        color="red"
+        label
+        outlined
+      >
+        无法获取到视频源请联系管理员
+      </v-chip>
+    </v-card>
   </div>
 </template>
 
@@ -67,7 +92,9 @@ export default {
       initial: 0,
       current: 0,
       video: null,
+      nextVideo: null,
       iconPlayShow: true,
+      error: [],
       likeList: [],
       dislikeList: []
     }
@@ -82,6 +109,11 @@ export default {
       return function (url) {
         return this.dislikeList.includes(url)
       }
+    },
+    isVideoLoadError () {
+      return function (index) {
+        return this.error.includes(index)
+      }
     }
   },
   mounted () {
@@ -94,6 +126,10 @@ export default {
       this.video.pause()
       this.video = document.querySelectorAll('video')[index]
       this.current = index
+      if (this.videos.length - 1 > index + 1) {
+        this.nextVideo = document.querySelectorAll('video')[index + 1]
+        this.nextVideo.preload = 'auto'
+      }
       setTimeout(() => {
         this.iconPlayShow = false
         this.video.play()
@@ -111,6 +147,8 @@ export default {
       this.video = document.querySelectorAll('video')[this.current]
       this.iconPlayShow = false
       this.video.play()
+      this.nextVideo = document.querySelectorAll('video')[this.current + 1]
+      this.nextVideo.preload = 'auto'
     },
     pauseVideo () { // 暂停\播放
       if (this.video.paused) {
@@ -124,6 +162,9 @@ export default {
           this.video.pause()
         }, 100)
       }
+    },
+    videoLoadError () {
+      this.error.push(this.current)
     },
     like (url) {
       this.likeList.push(url)
@@ -150,7 +191,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
     .video-player {
         height: 100vh;
         width: 100vw;
@@ -176,7 +217,6 @@ export default {
     }
     .video-box {
         object-fit: fill !important;
-        /*z-index: 999;*/
         width: 100%;
         height: 100%;
     }

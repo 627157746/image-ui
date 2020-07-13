@@ -123,7 +123,7 @@ export default {
         path: '/',
         maxAge: 60 * 60 * 24 * 30
       })
-      this.$store.commit('config/SET_DISPLAY', value)
+      this.$store.commit('web/SET_DISPLAY', value)
     }
   }
 }
