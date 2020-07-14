@@ -1,70 +1,98 @@
 <template>
-  <div class="container-box">
-    <div v-if="videos" class="van-swipe">
-      <van-swipe
-        :initial-swipe="initial"
-        :show-indicators="false"
-        vertical
-        :loop="false"
-        @change="onChange"
-      >
-        <van-swipe-item
-          v-for="(item, index) in videos"
-          :key="index"
-          class="product-swiper"
+  <v-card
+    v-touch="touch"
+    class="video-box"
+  >
+    <template v-if="videos">
+      <transition name="fade">
+        <video
+          v-show="show&&!error"
+          ref="video"
+          class="video"
+          webkit-playsinline="true"
+          playsinline="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="true"
+          preload
+          loop
+          :src="videos[0]"
+          @canplaythrough="canPlayThrough"
+          @click="pauseVideo"
+          @error.prevent="videoLoadError"
+        />
+      </transition>
+      <transition name="fade">
+        <v-overlay
+          v-show="!show&&!error"
+          opacity="0.1"
+          :value="true"
+          absolute
         >
-          <video
-            class="video-box"
-            webkit-playsinline="true"
-            playsinline="true"
-            x5-video-player-type="h5"
-            x5-video-player-fullscreen="true"
-            loop
-            :src="item"
-            :preload="index===0?'auto':'none'"
-            @click="pauseVideo"
-            @error.prevent="videoLoadError"
+          <v-progress-circular
+            color="red lighten-1"
+            indeterminate
+            size="64"
           />
-          <div v-if="isVideoLoadError(index)" class="icon-play">
-            <v-card
-              height="100%"
-              class="d-flex align-center justify-center"
-            >
-              <v-chip
-                color="red"
-                label
-                outlined
-              >
-                视频加载失败请切换视频或者刷新浏览器！
-              </v-chip>
-            </v-card>
-          </div>
-          <img
-            v-show="iconPlayShow"
-            class="icon-play"
-            src="https://npjy.oss-cn-beijing.aliyuncs.com/images/file-1575340653940esdHR.png"
-            @click="playVideo"
+        </v-overlay>
+      </transition>
+      <transition name="fade">
+        <div v-show="error" class="load-error">
+          <v-card
+            class="load-error d-flex align-center justify-center"
           >
-          <div v-if="!isVideoLoadError(index)" class="tools-right">
-            <div class="tools-r-li">
-              <v-btn fab color="transparent" :disabled="disableLike(item)">
-                <v-icon large color="pink" @click="like(item)">
-                  mdi-heart
-                </v-icon>
-              </v-btn>
-            </div>
-            <div class="tools-r-li">
-              <v-btn fab="" color="transparent" :disabled="disableDislike(item)">
-                <v-icon large color="grey darken-4" @click="dislike(item)">
-                  mdi-thumb-down
-                </v-icon>
-              </v-btn>
-            </div>
-          </div>
-        </van-swipe-item>
-      </van-swipe>
-    </div>
-    <v-card v-else height="100%" class="d-flex justify-center align-center">
+            <v-chip
+              color="red"
+              label
+              outlined
+            >
+              视频加载失败请切换视频或者刷新浏览器！
+            </v-chip>
+          </v-card>
+        </div>
+      </transition>
+      <div v-show="iconPlayShow&&!error" class="icon-play" style="left:45%">
+        <v-btn
+          fab
+          dark
+          large
+          color="grey darken-3"
+          @click="pauseVideo"
+        >
+          <v-icon>
+            mdi-play
+          </v-icon>
+        </v-btn>
+      </div>
+      <div class="tool-btns">
+        <div class="d-flex flex-column">
+          <v-btn
+            class="my-2"
+            fab
+            dark
+            color="transparent"
+            :disabled="disableLike(videos[current])"
+            @click="like(videos[current])"
+          >
+            <v-icon color="pink">
+              mdi-heart
+            </v-icon>
+          </v-btn>
+          <v-btn
+            class="my-2"
+            fab
+            dark
+            color="transparent"
+            :disabled="disableDislike(videos[current])"
+            @click="dislike(videos[current])"
+          >
+            <v-icon color="grey darken-4">
+              mdi-thumb-down
+            </v-icon>
+          </v-btn>
+        </div>
+      </div>
+    </template>
+    <template v-else>
       <v-chip
         color="red"
         label
@@ -72,8 +100,8 @@
       >
         无法获取到视频源请联系管理员
       </v-chip>
-    </v-card>
-  </div>
+    </template>
+  </v-card>
 </template>
 
 <script>
@@ -89,14 +117,17 @@ export default {
   },
   data () {
     return {
-      initial: 0,
-      current: 0,
       video: null,
-      nextVideo: null,
-      iconPlayShow: true,
-      error: [],
+      current: 0,
+      error: false,
+      show: false,
+      iconPlayShow: false,
       likeList: [],
-      dislikeList: []
+      dislikeList: [],
+      touch: {
+        up: () => this.changeVideo('up'),
+        down: () => this.changeVideo('down')
+      }
     }
   },
   computed: {
@@ -109,48 +140,53 @@ export default {
       return function (url) {
         return this.dislikeList.includes(url)
       }
-    },
-    isVideoLoadError () {
-      return function (index) {
-        return this.error.includes(index)
-      }
     }
   },
   mounted () {
-    setTimeout(() => {
-      this.playVideo()
-    }, 500)
+    this.playVideo()
   },
   methods: {
-    async onChange (index) {
-      this.video.pause()
-      this.video = document.querySelectorAll('video')[index]
-      this.current = index
-      if (this.videos.length - 1 > index + 1) {
-        this.nextVideo = document.querySelectorAll('video')[index + 1]
-        this.nextVideo.preload = 'auto'
-      }
+    playVideo () {
+      this.video = this.$refs.video
       setTimeout(() => {
-        this.iconPlayShow = false
         this.video.play()
+        if (this.video.paused) {
+          this.iconPlayShow = true
+        }
       }, 100)
+      const showTip = localStorage.getItem('tip') !== '1'
+      if (showTip) {
+        this.$toast.show('上滑加载下一条视频，下滑加载上一条视频', { position: 'bottom-center', duration: 3000 })
+        localStorage.setItem('tip', '1')
+      }
+    },
+    async changeVideo (direction) {
+      this.show = false
+      this.error = false
+      setTimeout(() => {
+        this.video.pause()
+        this.iconPlayShow = false
+        if (direction === 'down') {
+          if (this.current > 0) {
+            this.current -= 1
+          }
+        } else {
+          this.current += 1
+        }
+        this.video.src = this.videos[this.current]
+        this.video.play()
+        if (this.video.paused) {
+          this.iconPlayShow = true
+        }
+      }, 500)
       if (this.videos.length - this.current <= 3) {
         const { data } = await getList(this.$axios)
         data.forEach((item) => {
           this.videos.push(item)
         })
-        this.initial = index
       }
     },
-    // 开始播放
-    playVideo (event) {
-      this.video = document.querySelectorAll('video')[this.current]
-      this.iconPlayShow = false
-      this.video.play()
-      this.nextVideo = document.querySelectorAll('video')[this.current + 1]
-      this.nextVideo.preload = 'auto'
-    },
-    pauseVideo () { // 暂停\播放
+    pauseVideo () {
       if (this.video.paused) {
         setTimeout(() => {
           this.iconPlayShow = false
@@ -164,7 +200,10 @@ export default {
       }
     },
     videoLoadError () {
-      this.error.push(this.current)
+      this.error = true
+    },
+    canPlayThrough () {
+      this.show = true
     },
     like (url) {
       this.likeList.push(url)
@@ -191,49 +230,20 @@ export default {
 }
 </script>
 
-<style scoped>
-    .video-player {
-        height: 100vh;
-        width: 100vw;
-    }
-    .product-swiper {
-        width: 100vw;
-        height: 100vh;
-    }
-    .van-swipe {
-        width: 100vw;
-        height: 100vh;
-        max-width: 550px;
-        margin: 0 auto;
-        position: relative;
-    }
-    .van-swipe {
-        width: 100%;
-        height: 100%;
-    }
-    .container-box {
-        width: 100vw;
-        height: 100vh;
-    }
-    .video-box {
-        object-fit: fill !important;
-        width: 100%;
-        height: 100%;
-    }
-    video {
-        object-position: 0 0;
-    }
-    .tools-right {
-        z-index: 1001;
-        position: absolute;
-        right: 20px;
-        top: 40vh
-    }
-    .tools-r-li {
-      margin-bottom: 30px;
-      position: relative;
-    }
-    .tools-r-li:last-child {
-        margin-bottom: 0px;
-    }
+<style lang="scss" scoped>
+
+.video-box{
+  height: 100vh;
+  .video,.load-error{
+    object-fit: fill !important;
+    width: 100%;
+    height: 100%;
+  }
+  .tool-btns{
+    position: absolute;
+    top:30%;
+    right:20px;
+    z-index: 999;
+  }
+}
 </style>

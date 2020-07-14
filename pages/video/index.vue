@@ -12,8 +12,23 @@
             :src="videos[0]"
             @click="pauseVideo"
             @ended="onPlayerEnded"
+            @canplaythrough="canPlayThrough"
             @error.prevent="videoLoadError"
           />
+        </transition>
+        <transition name="fade">
+          <v-overlay
+            v-show="!show&&!error"
+            opacity="0.1"
+            :value="true"
+            absolute
+          >
+            <v-progress-circular
+              color="red lighten-1"
+              indeterminate
+              size="64"
+            />
+          </v-overlay>
         </transition>
         <transition name="fade">
           <div v-show="error" class="load-error">
@@ -36,7 +51,7 @@
             dark
             large
             color="grey darken-3"
-            @click="playVideo"
+            @click="pauseVideo"
           >
             <v-icon>
               mdi-play
@@ -133,8 +148,8 @@ export default {
       loop: false,
       current: 0,
       error: false,
-      show: true,
-      iconPlayShow: true,
+      show: false,
+      iconPlayShow: false,
       likeList: [],
       dislikeList: []
     }
@@ -157,9 +172,11 @@ export default {
   },
   methods: {
     playVideo () {
-      this.iconPlayShow = false
       setTimeout(() => {
         this.video.play()
+        if (this.video.paused) {
+          this.iconPlayShow = true
+        }
       }, 100)
     },
     async changeVideo () {
@@ -170,8 +187,10 @@ export default {
         this.iconPlayShow = false
         this.current += 1
         this.video.src = this.videos[this.current]
-        this.show = true
         this.video.play()
+        if (this.video.paused) {
+          this.iconPlayShow = true
+        }
       }, 500)
       if (this.videos.length - this.current <= 3) {
         const { data } = await getList(this.$axios)
@@ -192,6 +211,9 @@ export default {
           this.video.pause()
         }, 100)
       }
+    },
+    canPlayThrough () {
+      this.show = true
     },
     onPlayerEnded () {
       this.changeVideo()
@@ -244,11 +266,5 @@ export default {
     width: 480px;
     height: 100%;
   }
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 </style>
