@@ -1,8 +1,8 @@
 <template>
   <transition :name="transitionName">
     <div v-show="visible" :style="customStyle" class="back-to-ceiling" @click="backToTop">
-      <v-btn dense fab color="grey">
-        <v-icon large color="white">
+      <v-btn small fab color="blue lighten-5">
+        <v-icon large color="pink">
           mdi-chevron-up
         </v-icon>
       </v-btn>
@@ -26,8 +26,8 @@ export default {
       type: Object,
       default () {
         return {
-          right: '20px',
-          bottom: '100px',
+          right: '40px',
+          bottom: '150px',
           width: '40px',
           height: '40px',
           'line-height': '45px'

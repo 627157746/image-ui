@@ -42,7 +42,7 @@
           type="success"
           @input="setShowAlert"
         >
-          点击图片开启预览模式
+          点击图片开启预览模式,移动端预览模式下可以左右滑动切换图片
         </v-alert>
         <template v-if="notAuth">
           <v-subheader class="pa-1">
@@ -90,7 +90,6 @@
 <script>
 import Hot from '@/components/Hot'
 import { listImageByAid } from '@/api/album'
-
 export default {
   components: {
     Hot

@@ -7,8 +7,8 @@
             mdi-autorenew
           </v-icon>
           最新更新
+          <order :not-show-order="true" />
         </v-card-title>
-        <order :not-show-order="true" />
         <album-list :page-data="data" />
       </v-card>
     </v-col>

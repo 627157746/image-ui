@@ -125,7 +125,7 @@ export default {
         this.loading = true
         const { code } = await register(this.$axios, this.registerForm)
         if (code === 200) {
-          this.$toasted.success('注册成功！')
+          this.$toast.success('注册成功！')
           const loginForm = {
             username: this.registerForm.email,
             password: this.registerForm.password

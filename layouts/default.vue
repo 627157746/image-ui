@@ -94,9 +94,6 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>
-          联系邮箱:admin@mnxjj.com
-        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -271,7 +268,7 @@ export default {
       return this.$store.state.auth.nickname
     },
     footer () {
-      return new Date().getFullYear() + ' 本站纯属免费美女图片和美女短视频欣赏网站，所有图片和视频均收集于互联网，如有侵犯权益请来信告知，我们将立即更正。联系邮箱:admin@mnxjj.com'
+      return new Date().getFullYear() + '美女小姐姐写真网'
     },
     logo () {
       return this.$store.state.web.imageDomain + '/images/logo.png'
@@ -295,7 +292,7 @@ export default {
       if (this.ky) {
         this.$router.push({ name: 'search', query: { ky: this.ky } })
       } else {
-        this.$toasted.show('请输入关键字。。。')
+        this.$toast.show('请输入关键字。。。')
       }
     },
     logout () {

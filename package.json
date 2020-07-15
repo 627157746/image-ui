@@ -22,11 +22,9 @@
     "@nuxtjs/toast": "3.3.0",
     "cookie-universal-nuxt": "^2.1.4",
     "jwt-simple": "^0.5.6",
-    "vant": "^2.2.15",
     "nuxt": "^2.0.0",
     "v-viewer": "^1.5.1",
-    "vue-social-share": "0.0.3",
-    "vue-toasted": "^1.1.28"
+    "vue-social-share": "0.0.3"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",

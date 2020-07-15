@@ -12,19 +12,20 @@
             :src="videos[0]"
             @click="pauseVideo"
             @ended="onPlayerEnded"
-            @canplaythrough="canPlayThrough"
+            @waiting="waiting"
+            @canplay="canPlay"
             @error.prevent="videoLoadError"
           />
         </transition>
         <transition name="fade">
           <v-overlay
-            v-show="!show&&!error"
+            v-show="(!show&&!error)||loading"
             opacity="0.1"
             :value="true"
             absolute
           >
             <v-progress-circular
-              color="red lighten-1"
+              color="pink"
               indeterminate
               size="64"
             />
@@ -36,7 +37,7 @@
               class="load-error d-flex align-center justify-center"
             >
               <v-chip
-                color="red"
+                color="pink"
                 label
                 outlined
               >
@@ -122,11 +123,11 @@
     </template>
     <template v-else>
       <v-chip
-        color="red"
+        color="pink"
         label
         outlined
       >
-        无法获取到视频源请联系管理员
+        无法获取到视频源
       </v-chip>
     </template>
   </v-card>
@@ -149,6 +150,7 @@ export default {
       current: 0,
       error: false,
       show: false,
+      loading: false,
       iconPlayShow: false,
       likeList: [],
       dislikeList: []
@@ -180,7 +182,11 @@ export default {
       }, 100)
     },
     async changeVideo () {
-      this.show = false
+      if (document.fullscreenElement) {
+        this.show = true
+      } else {
+        this.show = false
+      }
       this.error = false
       setTimeout(() => {
         this.video.pause()
@@ -212,8 +218,12 @@ export default {
         }, 100)
       }
     },
-    canPlayThrough () {
+    canPlay () {
+      this.loading = false
       this.show = true
+    },
+    waiting () {
+      this.loading = true
     },
     onPlayerEnded () {
       this.changeVideo()
@@ -229,8 +239,10 @@ export default {
         video.mozRequestFullScreen()
       } else if (video.webkitRequestFullScreen) {
         video.webkitRequestFullScreen()
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen()
       } else {
-        this.$toasted.show('抱歉您的浏览器不支持全屏播放')
+        this.$toast.show('抱歉您的浏览器不支持全屏播放')
       }
     },
     like (url) {

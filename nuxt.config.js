@@ -16,6 +16,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: 'https://cdn.mnxjj.com/images/favicon.ico' }
+    ],
+    script: [
+      { src: 'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver', body: true }
     ]
   },
   /*
@@ -36,8 +39,7 @@ export default {
     { src: '@/plugins/v-viewer' },
     { src: '@/plugins/baidu-count' },
     { src: '@/plugins/share', ssr: false },
-    { src: '@/plugins/axios' },
-    { src: '@/plugins/video' }
+    { src: '@/plugins/axios' }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -70,7 +72,8 @@ export default {
     debug: false
   },
   router: {
-    middleware: 'auth'
+    middleware: 'auth',
+    prefetchLinks: false
   },
   proxy: {
     '/api': { target: 'http://localhost:8080', pathRewrite: { '^/api/': '' } }
@@ -104,6 +107,22 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+      if (ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
+      }
+    },
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '.',
+        maxSize: 256000
+      }
     }
   }
 }

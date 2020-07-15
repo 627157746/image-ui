@@ -24,14 +24,20 @@
               :src="imageDomain+album.cover"
             >
               <div class="img-title white--text">
-                <div class="mx-2 text-truncate" to="/">
+                <div
+                  v-if="ky"
+                  class="mx-2 text-truncate"
+                  to="/"
+                  v-html="highLight(album.title)"
+                />
+                <div v-else class="mx-2 text-truncate" to="/">
                   {{ album.title }}
                 </div>
                 <div class="float-left mx-1">
                   <v-icon color="white" dense>
                     mdi-clock-outline
                   </v-icon>
-                  {{ album.createTime|formatDate(false) }}
+                  {{ album.createTime|formatTime }}
                 </div>
                 <div class="float-left mx-1">
                   <v-icon color="white" dense>
@@ -52,7 +58,7 @@
                   align="center"
                   justify="center"
                 >
-                  <v-progress-circular indeterminate color="grey lighten-5" />
+                  <v-progress-circular indeterminate color="pink" />
                 </v-row>
               </template>
             </v-img>
@@ -74,6 +80,9 @@
         </template>
       </v-hover>
     </v-col>
+    <v-chip v-if="ky&&pageData.total===0" class="ml-12 my-3" color="pink" outlined>
+      搜索结果为空
+    </v-chip>
     <v-col v-if="pageData.pages>1" class="hidden-xs-only">
       <v-pagination
         v-model="pageData.current"
@@ -144,6 +153,11 @@ export default {
     },
     display () {
       return this.$store.state.web.display
+    },
+    highLight () {
+      return function (title) {
+        return title.replace(this.ky, `<span class="orange">${this.ky}</span>`)
+      }
     }
   },
 

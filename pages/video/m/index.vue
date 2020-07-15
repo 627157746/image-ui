@@ -2,11 +2,32 @@
   <v-card
     v-touch="touch"
     class="video-box"
+    color="black"
   >
+    <v-toolbar
+      v-show="iconPlayShow"
+      dense
+      class="bar"
+      color="transparent"
+    >
+      <v-btn
+        nuxt
+        link
+        to="/"
+        icon
+      >
+        <v-icon
+          large
+          color="pink"
+        >
+          mdi-home
+        </v-icon>
+      </v-btn>
+    </v-toolbar>
     <template v-if="videos">
       <transition name="fade">
         <video
-          v-show="show&&!error"
+          v-show="(show&&!error)|| isQQMobile"
           ref="video"
           class="video"
           webkit-playsinline="true"
@@ -16,20 +37,21 @@
           preload
           loop
           :src="videos[0]"
-          @canplaythrough="canPlayThrough"
+          @waiting="waiting"
+          @canplay="canPlay"
           @click="pauseVideo"
           @error.prevent="videoLoadError"
         />
       </transition>
       <transition name="fade">
         <v-overlay
-          v-show="!show&&!error"
+          v-show="(!show&&!error)||loading"
           opacity="0.1"
           :value="true"
           absolute
         >
           <v-progress-circular
-            color="red lighten-1"
+            color="pink"
             indeterminate
             size="64"
           />
@@ -41,7 +63,7 @@
             class="load-error d-flex align-center justify-center"
           >
             <v-chip
-              color="red"
+              color="pink"
               label
               outlined
             >
@@ -94,11 +116,11 @@
     </template>
     <template v-else>
       <v-chip
-        color="red"
+        color="pink"
         label
         outlined
       >
-        无法获取到视频源请联系管理员
+        无法获取到视频源
       </v-chip>
     </template>
   </v-card>
@@ -117,10 +139,12 @@ export default {
   },
   data () {
     return {
+      isQQMobile: false,
       video: null,
       current: 0,
       error: false,
       show: false,
+      loading: false,
       iconPlayShow: false,
       likeList: [],
       dislikeList: [],
@@ -147,6 +171,7 @@ export default {
   },
   methods: {
     playVideo () {
+      this.isQQMobile = navigator.userAgent.toLowerCase().includes('mqqbrowser')
       this.video = this.$refs.video
       setTimeout(() => {
         this.video.play()
@@ -202,8 +227,12 @@ export default {
     videoLoadError () {
       this.error = true
     },
-    canPlayThrough () {
+    canPlay () {
+      this.loading = false
       this.show = true
+    },
+    waiting () {
+      this.loading = true
     },
     like (url) {
       this.likeList.push(url)
@@ -243,6 +272,12 @@ export default {
     position: absolute;
     top:30%;
     right:20px;
+    z-index: 999;
+  }
+  .bar{
+    width: 100%;
+    top:0;
+    position: absolute;
     z-index: 999;
   }
 }

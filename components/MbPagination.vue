@@ -1,10 +1,20 @@
 <template>
   <div class="px-3 d-flex text-decoration-none">
     <v-btn
+      style="display:none"
       class="mx-2"
       text
       :href="lastPage"
       :disabled="_current===1"
+    >
+      上一页
+    </v-btn>
+    <v-btn
+      text
+      color="pink"
+      class="mx-2"
+      :disabled="_current===1"
+      @click="toPage(_current - 1)"
     >
       上一页
     </v-btn>
@@ -22,10 +32,20 @@
       </template>
     </v-select>
     <v-btn
+      style="display:none"
       class="mx-2"
       text
       :href="nextPage"
       :disabled="_current===pages"
+    >
+      下一页
+    </v-btn>
+    <v-btn
+      text
+      color="pink"
+      class="mx-2"
+      :disabled="_current===pages"
+      @click="toPage(_current +1)"
     >
       下一页
     </v-btn>

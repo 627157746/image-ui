@@ -46,7 +46,7 @@
               class="my-2"
             >
               <v-list-item-icon>
-                <v-icon large :color="index<3?'red':''">
+                <v-icon large :color="index<3?'pink':''">
                   {{ 'mdi-numeric-'+(index+1)+'-box-outline' }}
                 </v-icon>
               </v-list-item-icon>
