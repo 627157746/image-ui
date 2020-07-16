@@ -226,7 +226,7 @@
     </v-app-bar>
     <v-content>
       <v-container style="height:100%">
-        <nuxt />
+        <nuxt :keep-alive="isKeepAlive" />
       </v-container>
     </v-content>
     <v-footer
@@ -254,10 +254,19 @@ export default {
       right: true,
       rightDrawer: false,
       title: '美女小姐姐写真网',
-      ky: undefined
+      ky: undefined,
+      noCacheRoute: [
+        't-tid-aid',
+        'search',
+        'video',
+        'video-m'
+      ]
     }
   },
   computed: {
+    isKeepAlive () {
+      return !this.noCacheRoute.includes(this.$route.name)
+    },
     auth () {
       return this.$store.state.auth.token
     },

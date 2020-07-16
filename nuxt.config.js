@@ -11,7 +11,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'keywords', name: 'keywords', content: '美女图片,性感美女,美女写真,COSER写真' },
+      { hid: 'keywords', name: 'keywords', content: '美女图片,性感美女,美女写真,COSER' },
       { hid: 'description', name: 'description', content: '美女小姐姐写真网(https://www.mnxjj.com)每日分享最新最全的妹子图片和高清性感美女图片，包括性感妹子、日本妹子、台湾妹子、清纯妹子、COSER。' }
     ],
     link: [

@@ -80,8 +80,8 @@
         </template>
       </v-hover>
     </v-col>
-    <v-chip v-if="ky&&pageData.total===0" class="ml-12 my-3" color="pink" outlined>
-      搜索结果为空
+    <v-chip v-if="ky&&pageData.total===0" class="ml-6 my-3" color="orange" outlined>
+      <span class="orange mx-2" style="color:white">{{ ky }}</span>的搜索结果为空
     </v-chip>
     <v-col v-if="pageData.pages>1" class="hidden-xs-only">
       <v-pagination

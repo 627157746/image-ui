@@ -1,17 +1,23 @@
 <template>
   <v-row>
     <v-col lg="9" md="12">
-      <v-card>
-        <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
-        <sort :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
-        <album-list
-          :page-data="data"
-          :tid="null"
-          :search="true"
-          :o="pageQuery.o"
-          :ky="pageQuery.ky"
-        />
-      </v-card>
+      <v-skeleton-loader
+        :loading="$fetchState.pending"
+        transition="scale-transition"
+        type="image"
+      >
+        <v-card>
+          <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
+          <sort :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
+          <album-list
+            :page-data="data"
+            :tid="null"
+            :search="true"
+            :o="pageQuery.o"
+            :ky="pageQuery.ky"
+          />
+        </v-card>
+      </v-skeleton-loader>
     </v-col>
     <v-col class="hidden-md-and-down" lg="3" md="0">
       <hot />
@@ -30,6 +36,43 @@ export default {
     Hot,
     AlbumList
   },
+  async fetch () {
+    const { query } = this.$route
+    const pageQuery = {
+      pg: Number(query.pg) ? Number(query.pg) : 1,
+      o: query.o ? Number(query.o) : 0,
+      ky: query.ky
+    }
+    const { data } = await pageByQuery(this.$axios, pageQuery)
+    this.data = data
+    this.pageQuery = pageQuery
+    this.breadcrumbs = [
+      {
+        text: '主页',
+        disabled: false,
+        href: '/'
+      },
+      {
+        text: '搜索',
+        disabled: true,
+        href: '/search'
+      }
+    ]
+  },
+  data () {
+    return {
+      data: {},
+      pageQuery: {},
+      breadcrumbs: []
+    }
+  },
+  watch: {
+    '$route.query' (newQuery, oldQuery) {
+      if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
+        this.$fetch()
+      }
+    }
+  },
   validate ({ params, query }) {
     const regex = /^\d+$/
     const pg = regex.test(query.pg)
@@ -44,38 +87,10 @@ export default {
     }
     return ky
   },
-  fetch () {
-    console.log(this.$route)
-  },
-  async asyncData ({ $axios, query }) {
-    const pageQuery = {
-      pg: Number(query.pg) ? Number(query.pg) : 1,
-      o: query.o ? Number(query.o) : 0,
-      ky: query.ky
-    }
-    const { data } = await pageByQuery($axios, pageQuery)
-    return {
-      data,
-      pageQuery,
-      breadcrumbs: [
-        {
-          text: '主页',
-          disabled: false,
-          href: '/'
-        },
-        {
-          text: '搜索',
-          disabled: true,
-          href: '/search'
-        }
-      ]
-    }
-  },
   head () {
     return {
       title: this.pageQuery.ky + ' - 搜索'
     }
-  },
-  watchQuery: ['pg', 'o', 'ky']
+  }
 }
 </script>

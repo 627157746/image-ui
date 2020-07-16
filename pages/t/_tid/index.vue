@@ -36,8 +36,7 @@ export default {
     AlbumList
   },
   async fetch () {
-    const params = this.$route.params
-    const query = this.$route.query
+    const { params, query } = this.$route
     const pageQuery = {
       t: Number(params.tid),
       pg: Number(query.pg) ? Number(query.pg) : 1,

@@ -1,28 +1,42 @@
 <template>
   <div class="d-flex" style="justify-content: space-between">
-    <v-btn-toggle
+    <div
       v-if="!notShowOrder"
-      v-model="_order"
-      dense
-      class="ma-3"
+      class="mx-3 my-3"
     >
       <v-btn
+        dense
+        text
+
+        :disabled="_order===0"
         link
         nuxt
         :to="search?{ name: 'search', query: { o:0, ky: _ky } }:{ name: 't-tid', params: { tid: _tid }, query: { o:0 } }"
       >
-        <v-icon>mdi-autorenew</v-icon>
-        最新
+        <v-icon :style="{'color':_order===0?'pink':''}">
+          mdi-autorenew
+        </v-icon>
+        <span :style="{'color':_order===0?'pink':''}">
+          最新
+        </span>
       </v-btn>
       <v-btn
+        dense
+        text
+        :color="_order===1?'pink':''"
+        :disabled="_order===1"
         link
         nuxt
         :to="search?{ name: 'search', query: { o:1, ky: _ky } }:{ name: 't-tid', params: { tid: _tid }, query: { o:1 } }"
       >
-        <v-icon>mdi-fire</v-icon>
-        最火
+        <v-icon :style="{'color':_order===1?'pink':''}">
+          mdi-fire
+        </v-icon>
+        <span :style="{'color':_order===1?'pink':''}">
+          最火
+        </span>
       </v-btn>
-    </v-btn-toggle>
+    </div>
     <v-menu>
       <template v-slot:activator="{ on, attrs }">
         <v-btn

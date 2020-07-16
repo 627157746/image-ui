@@ -6,7 +6,10 @@
         transition="scale-transition"
         type="image"
       >
-        <v-card>
+        <v-card v-if="$fetchState.error">
+          {{ $fetchState.error.msg }}
+        </v-card>
+        <v-card v-else>
           <v-breadcrumbs class="hidden-xs-only" :items="breadcrumbs" />
           <div class="pt-3 text-center px-2">
             {{ data.title }}
@@ -61,24 +64,31 @@
               </v-btn>
             </v-subheader>
           </template>
-          <viewer
-            ref="viewer"
-            :images="images"
-            class="mx-auto px-2"
-            :style="imageStyle"
+          <v-skeleton-loader
+            :loading="imageLoading"
+            transition="scale-transition"
+            type="image"
           >
-            <img
-              v-for="(image,index) in images"
-              :key="image.id"
-              :alt="data.title"
-              :title="data.title"
-              width="100%"
-              height="100%"
-              objectFitImages
-              :src="imageDomain+image"
-              :style="index!=0?{'display':'none'}:{}"
+            <viewer
+              ref="viewer"
+              :images="images"
+              class="mx-auto px-2"
+              :style="imageStyle"
             >
-          </viewer>
+              <img
+                v-for="(image,index) in images"
+                :key="image.id"
+                :alt="data.title"
+                :title="data.title"
+                width="100%"
+                height="100%"
+                objectFitImages
+                :src="imageDomain+image"
+                :style="index!==0?{'display':'none'}:{}"
+                @load="imageLoad(index)"
+              >
+            </viewer>
+          </v-skeleton-loader>
           <v-btn class="mt-3" text>
             <v-icon>mdi-share</v-icon>
             分享到:
@@ -101,13 +111,14 @@ export default {
     Hot
   },
   async fetch () {
-    console.log('fetch1')
     const { data } = await listImageByAid(this.$axios, this.$route.params.aid)
-    console.log('fetch2')
+    if (data === null) {
+      if (process.server) {
+        this.$nuxt.context.res.statusCode = 404
+      }
+      throw new Error('未找到')
+    }
     this.data = data
-    // if (data === null) {
-    //   return
-    // }
     let images = []
     if (this.data.images.length > 15) {
       images = this.data.images.slice(0, 15)
@@ -138,8 +149,11 @@ export default {
       data: [],
       images: [],
       breadcrumbs: {},
+      imageLoading: false,
       imageStyle: { 'max-width': '700px' },
-      config: {}
+      config: {
+        sites: ['qq', 'weibo', 'wechat', 'douban', 'facebook', 'twitter']
+      }
     }
   },
   validate ({ params, query }) {
@@ -163,6 +177,14 @@ export default {
   },
   watch: {
     '$fetchState.pending' () {
+      this.init()
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  methods: {
+    init () {
       if (!this.$fetchState.pending) {
         this.config = {
           url: 'https://www.mnxjj.com' + this.$route.path,
@@ -179,9 +201,12 @@ export default {
           })
         }
       }
-    }
-  },
-  methods: {
+    },
+    imageLoad (index) {
+      if (index === 0) {
+        this.imageLoading = false
+      }
+    },
     setShowAlert () {
       this.$cookies.set('showAlert', 0, {
         path: '/',
@@ -204,7 +229,7 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: +'‘' + this.data.title + '’，美女小姐姐写真网(https://www.mnxjj.com)提供图片浏览。'
+          content: this.data.title + '，美女小姐姐写真网(https://www.mnxjj.com' + this.$route.path + ')提供图片浏览。'
         }
       ]
     }
