@@ -73,7 +73,10 @@ export default {
   },
   router: {
     middleware: 'auth',
-    prefetchLinks: false
+    prefetchLinks: false,
+    scrollBehavior (to, from, savedPosition) {
+      return { x: 0, y: 0 }
+    }
   },
   proxy: {
     '/api': { target: 'http://localhost:8080', pathRewrite: { '^/api/': '' } }

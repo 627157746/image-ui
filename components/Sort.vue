@@ -6,11 +6,19 @@
       dense
       class="ma-3"
     >
-      <v-btn @click="changeOrder(0)">
+      <v-btn
+        link
+        nuxt
+        :to="search?{ name: 'search', query: { o:0, ky: _ky } }:{ name: 't-tid', params: { tid: _tid }, query: { o:0 } }"
+      >
         <v-icon>mdi-autorenew</v-icon>
         最新
       </v-btn>
-      <v-btn @click="changeOrder(1)">
+      <v-btn
+        link
+        nuxt
+        :to="search?{ name: 'search', query: { o:1, ky: _ky } }:{ name: 't-tid', params: { tid: _tid }, query: { o:1 } }"
+      >
         <v-icon>mdi-fire</v-icon>
         最火
       </v-btn>
@@ -111,13 +119,6 @@ export default {
     }
   },
   methods: {
-    changeOrder (o) {
-      if (this.search) {
-        this.$router.push({ name: 'search', query: { o, ky: this._ky } })
-      } else {
-        this.$router.push({ name: 't-tid', params: { tid: this._tid }, query: { o } })
-      }
-    },
     changeDisplay (value) {
       this.$cookies.set('display', value, {
         path: '/',

@@ -3,7 +3,7 @@
     <v-col lg="9" md="12">
       <v-card>
         <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
-        <order :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
+        <sort :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
         <album-list
           :page-data="data"
           :tid="null"
@@ -22,11 +22,11 @@
 <script>
 import Hot from '@/components/Hot'
 import AlbumList from '@/components/AlbumList'
-import Order from '@/components/Order'
+import Sort from '@/components/Sort'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
-    Order,
+    Sort,
     Hot,
     AlbumList
   },
@@ -43,6 +43,9 @@ export default {
       return ky && o
     }
     return ky
+  },
+  fetch () {
+    console.log(this.$route)
   },
   async asyncData ({ $axios, query }) {
     const pageQuery = {
