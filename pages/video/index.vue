@@ -61,58 +61,86 @@
         </div>
       </div>
       <div class="d-flex flex-column mx-5">
-        <v-btn
-          class="my-2"
-          fab
-          dark
-          large
-          color="pink"
-          :disabled="disableLike(videos[current])"
-          @click="like(videos[current])"
-        >
-          <v-icon>
-            mdi-heart
-          </v-icon>
-        </v-btn>
-        <v-btn
-          class="my-2"
-          fab
-          dark
-          large
-          color="grey"
-          :disabled="disableDislike(videos[current])"
-          @click="dislike(videos[current])"
-        >
-          <v-icon>
-            mdi-thumb-down
-          </v-icon>
-        </v-btn>
-        <v-btn
-          v-ripple
-          class="my-2"
-          fab
-          dark
-          large
-          color="light-blue"
-          @click="changeVideo"
-        >
-          <v-icon>
-            mdi-autorenew
-          </v-icon>
-        </v-btn>
-        <v-btn
-          v-ripple
-          class="my-2"
-          fab
-          dark
-          large
-          color="light-green"
-          @click="fullscreenVideo"
-        >
-          <v-icon>
-            mdi-fullscreen
-          </v-icon>
-        </v-btn>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              class="my-2"
+              fab
+              dark
+              large
+              color="pink"
+              :disabled="disableLike(videos[current])"
+              v-on="on"
+              @click="like(videos[current])"
+            >
+              <v-icon>
+                mdi-heart
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>喜欢</span>
+        </v-tooltip>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              class="my-2"
+              fab
+              dark
+              large
+              color="grey"
+              :disabled="disableDislike(videos[current])"
+              v-on="on"
+              @click="dislike(videos[current])"
+            >
+              <v-icon>
+                mdi-thumb-down
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>不喜欢</span>
+        </v-tooltip>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-ripple
+              v-bind="attrs"
+              class="my-2"
+              fab
+              dark
+              large
+              color="light-blue"
+              v-on="on"
+              @click="changeVideo"
+            >
+              <v-icon>
+                mdi-autorenew
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>切换</span>
+        </v-tooltip>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-ripple
+              v-bind="attrs"
+              class="my-2"
+              fab
+              dark
+              large
+              color="light-green"
+              v-on="on"
+              @click="fullscreenVideo"
+            >
+              <v-icon>
+                mdi-fullscreen
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>全屏</span>
+        </v-tooltip>
         <v-switch
           v-model="loop"
           primary
@@ -137,14 +165,12 @@
 import { getList, score } from '@/api/video'
 export default {
   middleware: 'video-client',
-  async asyncData ({ $axios }) {
-    const { data } = await getList($axios)
-    return {
-      videos: data
-    }
+  async fetch () {
+    this.videos = await getList(this.$axios).then(res => res.data)
   },
   data () {
     return {
+      videos: [],
       video: null,
       loop: false,
       current: 0,
@@ -168,18 +194,29 @@ export default {
       }
     }
   },
+  watch: {
+    '$fetchState.pending' () {
+      this.playVideo()
+    }
+  },
+  destroyed () {
+    this.video.pause()
+    this.video.src = ''
+  },
   mounted () {
-    this.video = this.$refs.video
     this.playVideo()
   },
   methods: {
     playVideo () {
-      setTimeout(() => {
-        this.video.play()
-        if (this.video.paused) {
-          this.iconPlayShow = true
-        }
-      }, 100)
+      if (!this.$fetchState.pending) {
+        this.video = this.$refs.video
+        setTimeout(() => {
+          this.video.play()
+          if (this.video.paused) {
+            this.iconPlayShow = true
+          }
+        }, 100)
+      }
     },
     async changeVideo () {
       if (document.fullscreenElement) {

@@ -6,7 +6,8 @@
         transition="scale-transition"
         type="image"
       >
-        <v-card>
+        <erro v-if="$fetchState.error" :message="$fetchState.error.message" />
+        <v-card v-else>
           <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
           <sort
             :order="pageQuery.o"
@@ -27,10 +28,12 @@
 <script>
 import Hot from '@/components/Hot'
 import AlbumList from '@/components/AlbumList'
+import Erro from '@/components/Erro'
 import Sort from '@/components/Sort'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
+    Erro,
     Sort,
     Hot,
     AlbumList
@@ -47,7 +50,7 @@ export default {
       if (process.server) {
         this.$nuxt.context.res.statusCode = 404
       }
-      throw new Error('Post not found')
+      throw new Error('网页未找到')
     }
     this.data = data
     this.pageQuery = pageQuery

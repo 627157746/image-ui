@@ -6,9 +6,7 @@
         transition="scale-transition"
         type="image"
       >
-        <v-card v-if="$fetchState.error">
-          {{ $fetchState.error.msg }}
-        </v-card>
+        <erro v-if="$fetchState.error" :message="$fetchState.error.message" />
         <v-card v-else>
           <v-card-title>
             <v-icon>
@@ -31,9 +29,11 @@
 import Hot from '@/components/Hot'
 import Sort from '@/components/Sort'
 import AlbumList from '@/components/AlbumList'
+import Erro from '@/components/Erro'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
+    Erro,
     Sort,
     Hot,
     AlbumList
@@ -43,11 +43,11 @@ export default {
       search: false
     }
     this.data = await pageByQuery(this.$axios, pageQuery).then(res => res.data)
-    if (!this.data) {
+    if (this.data.records.length === 0) {
       if (process.server) {
         this.$nuxt.context.res.statusCode = 404
       }
-      throw new Error('系统繁忙')
+      throw new Error('网页未找到')
     }
   },
   data () {

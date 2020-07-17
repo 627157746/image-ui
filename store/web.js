@@ -2,27 +2,27 @@ export const state = () => ({
   menus: [
     {
       icon: 'mdi-chart-bubble',
-      title: '性感妹子',
+      title: '性感',
       to: '/t/1'
     },
     {
       icon: 'mdi-chart-bubble',
-      title: 'COSER妹子',
+      title: 'COSER',
       to: '/t/5'
     },
     {
       icon: 'mdi-chart-bubble',
-      title: '清纯妹子',
+      title: '清纯',
       to: '/t/2'
     },
     {
       icon: 'mdi-chart-bubble',
-      title: '日本妹子',
+      title: '日本',
       to: '/t/3'
     },
     {
       icon: 'mdi-chart-bubble',
-      title: '台湾妹子',
+      title: '台湾',
       to: '/t/4'
     },
     {

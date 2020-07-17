@@ -139,6 +139,7 @@ export default {
   },
   data () {
     return {
+      videos: [],
       isQQMobile: false,
       video: null,
       current: 0,
@@ -165,6 +166,10 @@ export default {
         return this.dislikeList.includes(url)
       }
     }
+  },
+  destroyed () {
+    this.video.pause()
+    this.video.src = ''
   },
   mounted () {
     this.playVideo()

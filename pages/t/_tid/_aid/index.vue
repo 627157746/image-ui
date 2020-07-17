@@ -6,9 +6,7 @@
         transition="scale-transition"
         type="image"
       >
-        <v-card v-if="$fetchState.error">
-          {{ $fetchState.error.msg }}
-        </v-card>
+        <erro v-if="$fetchState.error" :message="$fetchState.error.message" />
         <v-card v-else>
           <v-breadcrumbs class="hidden-xs-only" :items="breadcrumbs" />
           <div class="pt-3 text-center px-2">
@@ -105,9 +103,11 @@
 
 <script>
 import Hot from '@/components/Hot'
+import Erro from '@/components/Erro'
 import { listImageByAid } from '@/api/album'
 export default {
   components: {
+    Erro,
     Hot
   },
   async fetch () {
@@ -116,7 +116,7 @@ export default {
       if (process.server) {
         this.$nuxt.context.res.statusCode = 404
       }
-      throw new Error('未找到')
+      throw new Error('网页未找到')
     }
     this.data = data
     let images = []
@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     init () {
-      if (!this.$fetchState.pending) {
+      if (!this.$fetchState.pending && !this.$fetchState.error) {
         this.config = {
           url: 'https://www.mnxjj.com' + this.$route.path,
           title: this.data.title + ' - 美女小姐姐写真网，美女图片每日更新',

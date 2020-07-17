@@ -1,20 +1,16 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ error.message||otherError }}
-    </h1>
-    <NuxtLink to="/">
-      回到主页
-    </NuxtLink>
+  <v-app>
+    <erro v-if="$fetchState.error" :message="error.statusCode === 404?pageNotFound:otherError" />
   </v-app>
 </template>
 
 <script>
+import Erro from '@/components/Erro'
 export default {
   layout: 'empty',
+  components: {
+    Erro
+  },
   props: {
     error: {
       type: Object,

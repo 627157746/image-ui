@@ -10,15 +10,33 @@ export default {
     titleTemplate: '%s - ' + '美女小姐姐写真网，美女图片每日更新',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'keywords', name: 'keywords', content: '美女图片,性感美女,美女写真,COSER' },
-      { hid: 'description', name: 'description', content: '美女小姐姐写真网(https://www.mnxjj.com)每日分享最新最全的妹子图片和高清性感美女图片，包括性感妹子、日本妹子、台湾妹子、清纯妹子、COSER。' }
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1'
+      },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content: '美女图片,性感美女,美女写真,COSER'
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: '美女小姐姐写真网(https://www.mnxjj.com)每日分享最新最全的妹子图片和高清性感美女图片，包括性感妹子、日本妹子、台湾妹子、清纯妹子、COSER。'
+      }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: 'https://cdn.mnxjj.com/images/favicon.ico' }
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: 'https://cdn.mnxjj.com/images/favicon.ico'
+      }
     ],
     script: [
-      { src: 'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver', body: true }
+      {
+        src: 'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver',
+        body: true
+      }
     ]
   },
   /*
@@ -38,7 +56,10 @@ export default {
     { src: '@/plugins/filters' },
     { src: '@/plugins/v-viewer' },
     { src: '@/plugins/baidu-count' },
-    { src: '@/plugins/share', ssr: false },
+    {
+      src: '@/plugins/share',
+      ssr: false
+    },
     { src: '@/plugins/axios' }
   ],
   /*
@@ -74,12 +95,12 @@ export default {
   router: {
     middleware: 'auth',
     prefetchLinks: false,
-    scrollBehavior (to, from, savedPosition) {
-      return { x: 0, y: 0 }
-    }
   },
   proxy: {
-    '/api': { target: 'http://localhost:8080', pathRewrite: { '^/api/': '' } }
+    '/api': {
+      target: 'http://localhost:8080',
+      pathRewrite: { '^/api/': '' }
+    }
   },
   /*
   ** vuetify module configuration
@@ -106,9 +127,8 @@ export default {
   ** Build configuration
   */
   build: {
-    /*
-    ** You can extend webpack config here
-    */
+    analyze: true,
+    publicPath: '/mnxjj/',
     extend (config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
@@ -122,8 +142,8 @@ export default {
     extractCSS: true,
     optimization: {
       splitChunks: {
-        chunks: 'all',
         automaticNameDelimiter: '.',
+        // minSize: 30000,
         maxSize: 256000
       }
     }

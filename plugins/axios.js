@@ -13,16 +13,8 @@ export default function ({ $axios, redirect, app, store, error }) {
         store.dispatch('auth/removeToken').then(() => {
           redirect('/login?error=1')
         })
-      } else {
-        if (process.client) {
-          app.$toast.show(res.msg || '系统繁忙')
-        }
-        if (process.server) {
-          error({
-            statusCode: res.code,
-            message: res.msg
-          })
-        }
+      } else if (process.client) {
+        app.$toast.show(res.msg || '系统繁忙')
       }
       return Promise.reject(new Error(res.msg || 'Error'))
     } else {
