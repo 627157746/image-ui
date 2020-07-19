@@ -102,8 +102,8 @@
 </template>
 
 <script>
-import Hot from '@/components/Hot'
 import Erro from '@/components/Erro'
+import Hot from '@/components/Hot'
 import { listImageByAid } from '@/api/album'
 export default {
   components: {
@@ -236,6 +236,3 @@ export default {
   }
 }
 </script>
-
-<style scope>
-</style>

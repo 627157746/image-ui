@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Viewer from 'v-viewer'
-import 'viewerjs/dist/viewer.css'
+import 'viewerjs/dist/viewer.min.css'
 Vue.use(Viewer, {
   defaultOptions: {
     interval: 1500,

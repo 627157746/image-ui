@@ -92,14 +92,6 @@ export default {
   text-align: center;
   cursor: pointer;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0
-}
 .back-to-ceiling .Icon {
   fill: #9aaabf;
   background: none;

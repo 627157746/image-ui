@@ -54,7 +54,7 @@
           :key="item.value"
           @click="changeDisplay(item.value)"
         >
-          <v-list-item-title>{{ item.lable }}</v-list-item-title>
+          <v-list-item-title>{{ item.label }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -93,8 +93,8 @@ export default {
   data () {
     return {
       displayList: [
-        { lable: '单列', value: 12 },
-        { lable: '双列', value: 6 }
+        { label: '单列', value: 12 },
+        { label: '双列', value: 6 }
       ]
     }
   },

@@ -258,8 +258,7 @@ export default {
       noCacheRoute: [
         't-tid-aid',
         'search',
-        'video',
-        'video-m'
+        'video'
       ]
     }
   },

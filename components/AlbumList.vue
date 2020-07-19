@@ -175,7 +175,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .img-title{
   position: absolute;
   bottom: 0;

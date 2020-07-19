@@ -3,9 +3,6 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   mode: 'universal',
 
-  /*
-  ** Headers of the page
-  */
   head: {
     titleTemplate: '%s - ' + '美女小姐姐写真网，美女图片每日更新',
     meta: [
@@ -39,19 +36,10 @@ export default {
       }
     ]
   },
-  /*
-  ** Customize the progress-bar color
-  */
   loading: { color: 'pink' },
-  /*
-  ** Global CSS
-  */
   css: [
     'assets/main.css'
   ],
-  /*
-  ** Plugins to load before mounting the App
-  */
   plugins: [
     { src: '@/plugins/filters' },
     { src: '@/plugins/v-viewer' },
@@ -66,13 +54,9 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify'
   ],
-  /*
-  ** Nuxt.js modules
-  */
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/toast',
@@ -82,10 +66,6 @@ export default {
     position: 'top-center',
     duration: 2000
   },
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
   axios: {
     prefix: '/api',
     credentials: true,
@@ -94,7 +74,7 @@ export default {
   },
   router: {
     middleware: 'auth',
-    prefetchLinks: false,
+    prefetchLinks: false
   },
   proxy: {
     '/api': {
@@ -102,10 +82,6 @@ export default {
       pathRewrite: { '^/api/': '' }
     }
   },
-  /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -123,12 +99,9 @@ export default {
       }
     }
   },
-  /*
-  ** Build configuration
-  */
   build: {
-    analyze: true,
-    publicPath: '/mnxjj/',
+    // publicPath: '/mnxjj/',
+    publicPath: 'https://cdn.jsdelivr.net/gh/627157746/cdn/mnxjj',
     extend (config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
@@ -142,9 +115,11 @@ export default {
     extractCSS: true,
     optimization: {
       splitChunks: {
+        chunks: 'all',
         automaticNameDelimiter: '.',
-        // minSize: 30000,
-        maxSize: 256000
+        name: 'mnxjj'
+        // minSize: 128000,
+        // maxSize: 256000
       }
     }
   }

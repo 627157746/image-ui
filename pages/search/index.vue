@@ -6,7 +6,8 @@
         transition="scale-transition"
         type="image"
       >
-        <v-card>
+        <erro v-if="$fetchState.error" :message="$fetchState.error.message" />
+        <v-card v-else>
           <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
           <sort :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
           <album-list
@@ -26,15 +27,17 @@
 </template>
 
 <script>
-import Hot from '@/components/Hot'
-import AlbumList from '@/components/AlbumList'
+import Erro from '@/components/Erro'
 import Sort from '@/components/Sort'
+import AlbumList from '@/components/AlbumList'
+import Hot from '@/components/Hot'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
+    Erro,
     Sort,
-    Hot,
-    AlbumList
+    AlbumList,
+    Hot
   },
   async fetch () {
     const { query } = this.$route

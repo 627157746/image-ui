@@ -311,7 +311,6 @@ export default {
 .video-box{
   height: 80vh;
   .video,.load-error{
-    // object-fit: fill !important;
     width: 480px;
     height: 100%;
   }
