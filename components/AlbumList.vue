@@ -28,7 +28,7 @@
                   v-if="ky"
                   class="mx-2 text-truncate"
                   to="/"
-                  v-html="highLight(album.title)"
+                  v-html="album.title"
                 />
                 <div v-else class="mx-2 text-truncate" to="/">
                   {{ album.title }}
@@ -153,11 +153,6 @@ export default {
     },
     display () {
       return this.$store.state.web.display
-    },
-    highLight () {
-      return function (title) {
-        return title.replace(this.ky, `<span class="orange">${this.ky}</span>`)
-      }
     }
   },
 

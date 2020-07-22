@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <erro v-if="$fetchState.error" :message="error.statusCode === 404?pageNotFound:otherError" />
+    <erro :message="error.statusCode === 404?pageNotFound:otherError" />
   </v-app>
 </template>
 

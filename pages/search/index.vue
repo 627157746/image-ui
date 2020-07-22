@@ -9,7 +9,6 @@
         <erro v-if="$fetchState.error" :message="$fetchState.error.message" />
         <v-card v-else>
           <v-breadcrumbs class="hidden-sm-and-down" :items="breadcrumbs" />
-          <sort :order="pageQuery.o" :search="true" :ky="pageQuery.ky" />
           <album-list
             :page-data="data"
             :tid="null"
@@ -28,14 +27,12 @@
 
 <script>
 import Erro from '@/components/Erro'
-import Sort from '@/components/Sort'
 import AlbumList from '@/components/AlbumList'
 import Hot from '@/components/Hot'
 import { pageByQuery } from '@/api/album'
 export default {
   components: {
     Erro,
-    Sort,
     AlbumList,
     Hot
   },

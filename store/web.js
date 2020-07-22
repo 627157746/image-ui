@@ -38,8 +38,9 @@ export const state = () => ({
   display: 6
 })
 export const mutations = {
-  SET_HOT: (state, hot) => {
-    state.hot = hot
+  SET_INIT: (state, init) => {
+    state.hot = init.rank
+    state.imageDomain = init.imageDomain
   },
   SET_SHOW_ALERT: (state, showAlert) => {
     state.showAlert = showAlert
