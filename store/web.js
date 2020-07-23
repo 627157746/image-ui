@@ -12,6 +12,11 @@ export const state = () => ({
     },
     {
       icon: 'mdi-chart-bubble',
+      title: '专题',
+      to: '/tag'
+    },
+    {
+      icon: 'mdi-chart-bubble',
       title: '清纯',
       to: '/t/2'
     },

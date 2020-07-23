@@ -83,6 +83,16 @@ export default {
       required: true,
       type: Number,
       default: 1
+    },
+    tag: {
+      required: false,
+      type: Boolean,
+      default: false
+    },
+    tagName: {
+      required: false,
+      type: String,
+      default: undefined
     }
   },
   computed: {
@@ -100,6 +110,8 @@ export default {
     lastPage () {
       if (this.search) {
         return '/search?pg=' + (this._current - 1) + '&o=' + this.o + '&ky=' + this.ky
+      } else if (this.tag) {
+        return '/tag/' + this.tagName + '?pg=' + (this._current + -1)
       } else {
         return '/t/' + this.tid + '?pg=' + (this._current - 1) + '&o=' + this.o
       }
@@ -107,6 +119,8 @@ export default {
     nextPage () {
       if (this.search) {
         return '/search?pg=' + (this._current + 1) + '&o=' + this.o + '&ky=' + this.ky
+      } else if (this.tag) {
+        return '/tag/' + this.tagName + '?pg=' + (this._current + 1)
       } else {
         return '/t/' + this.tid + '?pg=' + (this._current + 1) + '&o=' + this.o
       }
@@ -116,6 +130,8 @@ export default {
     toPage (page) {
       if (this.search) {
         this.$router.push({ name: 'search', query: { pg: page, o: this.o, ky: this.ky } })
+      } else if (this.tag) {
+        this.$router.push({ name: 'tag-name', params: { name: this.tagName }, query: { pg: page } })
       } else {
         this.$router.push({ name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } })
       }

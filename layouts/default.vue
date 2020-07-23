@@ -134,17 +134,50 @@
       </v-toolbar-title>
       <v-spacer />
       <v-toolbar-title>
-        <v-text-field
+        <v-combobox
           ref="search"
           v-model="ky"
-          placeholder="请输入关键字。。。"
-          append-icon="mdi-magnify"
+          :items="searchHistory"
+          chips
           hide-details
+          clearable
+          label="请输入关键字。。。"
+          append-icon="mdi-magnify"
           dense
           solo
           @keyup.13="search"
           @click:append="search"
-        />
+        >
+          <template v-slot:selection="{ attrs, item }">
+            <v-chip
+              v-bind="attrs"
+              color="pink lighten-3"
+              label
+              small
+            >
+              <span style="color:white">{{ item }}</span>
+            </v-chip>
+          </template>
+          <template v-slot:item="{ index, item }">
+            <v-chip
+              color="pink lighten-3"
+              dark
+              label
+              small
+            >
+              {{ item }}
+            </v-chip>
+            <v-spacer />
+            <v-list-item-action @click.stop>
+              <v-btn
+                icon
+                @click.stop.prevent="delSearchByIndex(index)"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </template>
+        </v-combobox>
       </v-toolbar-title>
       <v-spacer />
       <template v-if="auth">
@@ -255,6 +288,7 @@ export default {
       rightDrawer: false,
       title: '美女小姐姐写真网',
       ky: undefined,
+      searchHistory: [],
       noCacheRoute: [
         't-tid-aid',
         'search',
@@ -284,6 +318,13 @@ export default {
   },
   created () {
     this.$vuetify.theme.dark = this.$store.state.web.dark
+    this.ky = this.$route.query.ky
+  },
+  mounted () {
+    const searchHistory = localStorage.getItem('searchHistory')
+    if (searchHistory) {
+      this.searchHistory = JSON.parse(searchHistory)
+    }
   },
   methods: {
     toHome () {
@@ -297,11 +338,19 @@ export default {
     },
     search () {
       this.$refs.search.blur()
-      if (this.ky) {
-        this.$router.push({ name: 'search', query: { ky: this.ky } })
-      } else {
-        this.$toast.show('请输入关键字。。。')
-      }
+      setTimeout(() => {
+        if (this.ky) {
+          this.searchHistory.unshift(this.ky)
+          localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
+          this.$router.push({ name: 'search', query: { ky: this.ky } })
+        } else {
+          this.$toast.show('请输入关键字。。。')
+        }
+      }, 300)
+    },
+    delSearchByIndex (index) {
+      this.searchHistory.splice(index, 1)
+      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
     },
     logout () {
       this.$store.dispatch('auth/logout').then(() => {

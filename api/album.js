@@ -10,3 +10,9 @@ export const listImageByAid = ($axios, aid) => {
 export const init = ($axios) => {
   return $axios.$get('/index')
 }
+export const listTags = ($axios) => {
+  return $axios.$get('/tags')
+}
+export const listByName = ($axios, query) => {
+  return $axios.$get('/tags/albums', { params: query })
+}

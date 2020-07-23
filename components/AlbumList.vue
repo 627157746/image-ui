@@ -80,8 +80,8 @@
         </template>
       </v-hover>
     </v-col>
-    <v-chip v-if="ky&&pageData.total===0" class="ml-6 my-3" color="orange" outlined>
-      <span class="orange mx-2" style="color:white">{{ ky }}</span>的搜索结果为空
+    <v-chip v-if="ky&&pageData.total===0" class="ml-6 my-3" color="pink lighten-3">
+      <span class="mx-2" style="color:white">{{ ky }}</span>的搜索结果为空
     </v-chip>
     <v-col v-if="pageData.pages>1" class="hidden-xs-only">
       <v-pagination
@@ -101,6 +101,8 @@
         :tid="tid"
         :o="o"
         :ky="ky"
+        :tag-name="tagName"
+        :tag="tag"
         @current="setCurrent"
       />
     </v-col>
@@ -137,6 +139,16 @@ export default {
       required: false,
       type: Boolean,
       default: false
+    },
+    tag: {
+      required: false,
+      type: Boolean,
+      default: false
+    },
+    tagName: {
+      required: false,
+      type: String,
+      default: undefined
     }
   },
   data () {
@@ -160,6 +172,8 @@ export default {
     toPage (page) {
       if (this.search) {
         this.$router.push({ name: 'search', query: { pg: page, o: this.o, ky: this.ky } })
+      } else if (this.tag) {
+        this.$router.push({ name: 'tag-name', params: { name: this.tagName }, query: { pg: page } })
       } else {
         this.$router.push({ name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } })
       }
@@ -170,15 +184,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.img-title{
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-image: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.8) 0%,
-    transparent 72px
-  );
-}
-</style>

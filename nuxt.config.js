@@ -8,6 +8,10 @@ export default {
     meta: [
       { charset: 'utf-8' },
       {
+        'http-equiv': 'Content-Language',
+        content: 'zh-cn'
+      },
+      {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1'
       },
