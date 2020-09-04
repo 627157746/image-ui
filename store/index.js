@@ -30,7 +30,7 @@ export const actions = {
     const dark = app.$cookies.get('dark') === 1
     commit('web/SET_DARK', dark)
     const _display = app.$cookies.get('display')
-    const display = _display || 6
+    const display = _display || 4
     commit('web/SET_DISPLAY', display)
   }
 }

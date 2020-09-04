@@ -3,6 +3,7 @@
     <v-navigation-drawer
       v-model="drawer"
       clipped-left
+      temporary
       app
     >
       <v-list>
@@ -133,10 +134,11 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <v-toolbar-title>
+      <v-toolbar-title class="pb-1">
         <v-combobox
           ref="search"
           v-model="ky"
+          style="width:300px"
           :items="searchHistory"
           chips
           hide-details

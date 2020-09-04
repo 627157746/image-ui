@@ -1,51 +1,50 @@
 <template>
   <div class="px-3 d-flex text-decoration-none">
     <v-btn
-      style="display:none"
-      class="mx-2"
-      text
-      :href="lastPage"
-      :disabled="_current===1"
-    >
-      上一页
-    </v-btn>
-    <v-btn
-      text
       color="pink"
       class="mx-2"
       :disabled="_current===1"
-      @click="toPage(_current - 1)"
+      :to="toPage(_current - 1)"
+      exact
+      nuxt
+      link
+      outlined
     >
       上一页
     </v-btn>
     <v-select
-      v-model="_current"
+      v-model="current"
       class="mx-2"
       style="flex:1"
       dense
       :items="pageList"
-      outlined
-      @change="toPage"
     >
       <template v-slot:item="{item}">
-        第{{ item }}页
+        <v-list-item
+          class="my-1"
+          block
+          :to="toPage(item)"
+          nuxt
+          link
+          exact
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              第{{ item }}页
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </template>
     </v-select>
     <v-btn
-      style="display:none"
-      class="mx-2"
-      text
-      :href="nextPage"
-      :disabled="_current===pages"
-    >
-      下一页
-    </v-btn>
-    <v-btn
-      text
       color="pink"
       class="mx-2"
       :disabled="_current===pages"
-      @click="toPage(_current +1)"
+      :to="toPage(_current+1)"
+      exact
+      nuxt
+      link
+      outlined
     >
       下一页
     </v-btn>
@@ -107,33 +106,15 @@ export default {
     pageList () {
       return Array.from(Array(this.pages), (v, k) => k + 1)
     },
-    lastPage () {
-      if (this.search) {
-        return '/search?pg=' + (this._current - 1) + '&o=' + this.o + '&ky=' + this.ky
-      } else if (this.tag) {
-        return '/tag/' + this.tagName + '?pg=' + (this._current + -1)
-      } else {
-        return '/t/' + this.tid + '?pg=' + (this._current - 1) + '&o=' + this.o
-      }
-    },
-    nextPage () {
-      if (this.search) {
-        return '/search?pg=' + (this._current + 1) + '&o=' + this.o + '&ky=' + this.ky
-      } else if (this.tag) {
-        return '/tag/' + this.tagName + '?pg=' + (this._current + 1)
-      } else {
-        return '/t/' + this.tid + '?pg=' + (this._current + 1) + '&o=' + this.o
-      }
-    }
-  },
-  methods: {
     toPage (page) {
-      if (this.search) {
-        this.$router.push({ name: 'search', query: { pg: page, o: this.o, ky: this.ky } })
-      } else if (this.tag) {
-        this.$router.push({ name: 'tag-name', params: { name: this.tagName }, query: { pg: page } })
-      } else {
-        this.$router.push({ name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } })
+      return function (page) {
+        if (this.ky) {
+          return { name: 'search', query: { pg: page, o: this.o, ky: this.ky } }
+        } else if (this.tag) {
+          return { name: 'tag-name', params: { name: this.tagName }, query: { pg: page } }
+        } else {
+          return { name: 't-tid', params: { tid: this.tid }, query: { pg: page, o: this.o } }
+        }
       }
     }
   }

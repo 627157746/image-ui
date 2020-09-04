@@ -1,11 +1,11 @@
 <template>
-  <v-row justify="start" align="start">
+  <v-row dense justify="start" align="start">
     <v-col
       v-for="album in pageData.records"
       :key="album.id"
       xl="3"
-      md="4"
-      sm="6"
+      md="3"
+      sm="4"
       :cols="display"
     >
       <v-hover :disabled="false">
@@ -27,29 +27,18 @@
                 <div
                   v-if="ky"
                   class="mx-2 text-truncate"
+                  style="font-size:14px"
                   to="/"
                   v-html="album.title"
                 />
-                <div v-else class="mx-2 text-truncate" to="/">
+                <div v-else class="mx-2 text-truncate" style="font-size:14px" to="/">
                   {{ album.title }}
                 </div>
-                <div class="float-left mx-1">
+                <div class="float-left mx-1" style="font-size:10px">
                   <v-icon color="white" dense>
                     mdi-clock-outline
                   </v-icon>
                   {{ album.createTime|formatTime }}
-                </div>
-                <div class="float-left mx-1">
-                  <v-icon color="white" dense>
-                    mdi-eye
-                  </v-icon>
-                  {{ album.hits }}
-                </div>
-                <div class="float-left mx-1">
-                  <v-icon color="white" dense>
-                    mdi-image
-                  </v-icon>
-                  {{ album.count }}P
                 </div>
               </div>
               <template v-slot:placeholder>

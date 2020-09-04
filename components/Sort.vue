@@ -94,7 +94,8 @@ export default {
     return {
       displayList: [
         { label: '单列', value: 12 },
-        { label: '双列', value: 6 }
+        { label: '双列', value: 6 },
+        { label: '三列', value: 4 }
       ]
     }
   },

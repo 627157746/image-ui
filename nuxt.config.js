@@ -18,7 +18,7 @@ export default {
       {
         hid: 'keywords',
         name: 'keywords',
-        content: '美女图片,性感美女,美女写真,COSER'
+        content: '美女小姐姐,丝袜美女,性感美女写真,美女性感图片,cosplay美女'
       },
       {
         hid: 'description',
@@ -32,12 +32,6 @@ export default {
         type: 'image/x-icon',
         href: 'https://cdn.mnxjj.com/images/favicon.ico'
       }
-    ],
-    script: [
-      {
-        src: 'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver',
-        body: true
-      }
     ]
   },
   loading: { color: 'pink' },
@@ -46,12 +40,9 @@ export default {
   ],
   plugins: [
     { src: '@/plugins/filters' },
-    { src: '@/plugins/v-viewer' },
+    // { src: '@/plugins/v-viewer' },
     { src: '@/plugins/baidu-count' },
-    {
-      src: '@/plugins/share',
-      ssr: false
-    },
+    // { src: '@/plugins/share', mode: 'client' },
     { src: '@/plugins/axios' }
   ],
   /*
@@ -75,6 +66,9 @@ export default {
     credentials: true,
     proxy: true,
     debug: false
+  },
+  render: {
+    resourceHints: false
   },
   router: {
     middleware: 'auth',
@@ -101,10 +95,14 @@ export default {
           success: colors.green.accent3
         }
       }
-    }
+    },
+    defaultAssets: {
+      font: false,
+      icons: 'mdi'
+    },
+    treeShake: true
   },
   build: {
-    // publicPath: '/mnxjj/',
     publicPath: 'https://cdn.jsdelivr.net/gh/627157746/cdn/mnxjj',
     extend (config, ctx) {
       if (ctx.isClient) {
@@ -121,9 +119,9 @@ export default {
       splitChunks: {
         chunks: 'all',
         automaticNameDelimiter: '.',
-        name: 'mnxjj'
-        // minSize: 128000,
-        // maxSize: 256000
+        name: 'mnxjj',
+        minSize: 128000,
+        maxSize: 256000
       }
     }
   }

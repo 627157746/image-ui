@@ -76,8 +76,8 @@
               <img
                 v-for="(image,index) in images"
                 :key="image.id"
-                :alt="data.title"
-                :title="data.title"
+                :alt="data.title+index"
+                :title="data.title+index"
                 width="100%"
                 height="100%"
                 objectFitImages
@@ -87,11 +87,18 @@
               >
             </viewer>
           </v-skeleton-loader>
+          <v-divider />
           <v-btn class="mt-3" text>
             <v-icon>mdi-share</v-icon>
             分享到:
           </v-btn>
-          <share :config="config" class="pb-3 px-3" />
+          <client-only>
+            <share :config="config" class="pb-3 px-3" />
+          </client-only>
+          <v-toolbar flat>
+            <v-toolbar-title>相关</v-toolbar-title>
+          </v-toolbar>
+          <album-list :page-data="pageData" />
         </v-card>
       </v-skeleton-loader>
     </v-col>
@@ -102,13 +109,44 @@
 </template>
 
 <script>
+import 'social-share.js/dist/css/share.min.css'
+import 'viewerjs/dist/viewer.min.css'
+import Vue from 'vue'
+import Viewer from 'v-viewer'
 import Erro from '@/components/Erro'
 import Hot from '@/components/Hot'
+import AlbumList from '@/components/AlbumList'
 import { listImageByAid } from '@/api/album'
+import { Encrypt } from '@/util/aes'
+Vue.use(Viewer, {
+  defaultOptions: {
+    interval: 1500,
+    inline: false,
+    button: true,
+    navbar: true,
+    title: true,
+    toolbar: true,
+    tooltip: true,
+    movable: true,
+    zoomable: true,
+    rotatable: true,
+    scalable: true,
+    transition: true,
+    fullscreen: true,
+    keyboard: true,
+    url: 'data-source'
+  }
+})
+let share
+if (process.client) {
+  share = () => import('vue-social-share')
+}
 export default {
   components: {
     Erro,
-    Hot
+    Hot,
+    AlbumList,
+    share
   },
   async fetch () {
     const { data } = await listImageByAid(this.$axios, this.$route.params.aid)
@@ -119,6 +157,7 @@ export default {
       throw new Error('网页未找到')
     }
     this.data = data
+    this.pageData.records = data.similarities
     let images = []
     if (this.data.images.length > 15) {
       images = this.data.images.slice(0, 15)
@@ -147,12 +186,16 @@ export default {
   data () {
     return {
       data: [],
+      pageData: {
+        pages: 1,
+        records: []
+      },
       images: [],
       breadcrumbs: {},
       imageLoading: false,
       imageStyle: { 'max-width': '700px' },
       config: {
-        sites: ['qq', 'weibo', 'wechat', 'douban', 'facebook', 'twitter']
+        sites: ['qq', 'weibo', 'wechat', 'douban', 'twitter']
       }
     }
   },
@@ -190,7 +233,7 @@ export default {
           url: 'https://www.mnxjj.com' + this.$route.path,
           title: this.data.title + ' - 美女小姐姐写真网，美女图片每日更新',
           image: this.$store.state.web.imageDomain + this.data.images[0],
-          sites: ['qq', 'weibo', 'wechat', 'douban', 'facebook', 'twitter']
+          sites: ['qq', 'weibo', 'wechat', 'douban', 'twitter']
         }
         if (this.data.images.length > 15) {
           const lazyImageArr = this.chunk(this.data.images, 15)
@@ -220,12 +263,23 @@ export default {
         arr2.push(arr.slice(i, i + size))
       }
       return arr2
+    },
+    download () {
+      const temp = this.data.images[0].replace('/01.jpg', '')
+      const a = temp.match(/q\d+/)
+      const path = temp.replace(a, a + '-zip') + '.zip'
+      window.location = this.imageDomain + path + '?sign=' + encodeURI(Encrypt(new Date().getTime()))
     }
   },
   head () {
     return {
       title: this.data.title,
       meta: [
+        {
+          hid: 'keywords',
+          name: 'keywords',
+          content: this.data.title + ',' + this.data.keywords
+        },
         {
           hid: 'description',
           name: 'description',
