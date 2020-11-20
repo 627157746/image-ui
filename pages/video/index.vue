@@ -112,7 +112,7 @@
               large
               color="light-blue"
               v-on="on"
-              @click="changeVideo"
+              @click="changeVideo(true)"
             >
               <v-icon>
                 mdi-autorenew
@@ -147,6 +147,9 @@
           color="orange"
           label="循环播放"
         />
+        <v-chip color="pink" outlined>
+          键盘上下按键切换视频!
+        </v-chip>
       </div>
     </template>
     <template v-else>
@@ -204,6 +207,18 @@ export default {
     this.video.src = ''
   },
   mounted () {
+    document.onkeyup = (e) => {
+      switch (e.code) {
+        case 'ArrowUp':
+          this.changeVideo(false)
+          break
+        case 'ArrowDown':
+          this.changeVideo(true)
+          break
+        default:
+          break
+      }
+    }
     this.playVideo()
   },
   methods: {
@@ -218,7 +233,7 @@ export default {
         }, 100)
       }
     },
-    async changeVideo () {
+    async changeVideo (next) {
       if (document.fullscreenElement) {
         this.show = true
       } else {
@@ -228,7 +243,11 @@ export default {
       setTimeout(() => {
         this.video.pause()
         this.iconPlayShow = false
-        this.current += 1
+        if (next) {
+          this.current += 1
+        } else if (this.current > 0) {
+          this.current -= 1
+        }
         this.video.src = this.videos[this.current]
         this.video.play()
         if (this.video.paused) {
